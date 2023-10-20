@@ -1,0 +1,37 @@
+[
+  {
+    "model": "general_ledger.Category",
+    "pk": 1,
+    "fields": {
+      "category_name": "Activo"
+    }
+  },
+  {
+    "model": "general_ledger.Category",
+    "pk": 2,
+    "fields": {
+      "category_name": "Pasivo"
+    }
+  },
+  {
+    "model": "general_ledger.Category",
+    "pk": 3,
+    "fields": {
+      "category_name": "Patrimonio"
+    }
+  },
+  {
+    "model": "general_ledger.Category",
+    "pk": 4,
+    "fields": {
+      "category_name": "Gastos y Costos"
+    }
+  },
+  {
+    "model": "general_ledger.Category",
+    "pk": 5,
+    "fields": {
+      "category_name": "Ingresos"
+    }
+  }
+]

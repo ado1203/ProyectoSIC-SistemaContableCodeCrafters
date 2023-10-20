@@ -1,0 +1,35 @@
+[
+  {
+    "model": "general_ledger.Account",
+    "pk": 1,
+    "fields": {
+      "account_code": "11",
+      "account_name": "Cuenta Bancaria",
+      "account_balance": "0.00",
+      "catalog": 1,
+      "category": 1
+    }
+  },
+  {
+    "model": "general_ledger.Account",
+    "pk": 2,
+    "fields": {
+      "account_code": "21",
+      "account_name": "Cuentas por pagar",
+      "account_balance": "0.00",
+      "catalog": 1,
+      "category": 2
+    }
+  },
+  {
+    "model": "general_ledger.Account",
+    "pk": 3,
+    "fields": {
+      "account_code": "31",
+      "account_name": "Capital",
+      "account_balance": "0.00",
+      "catalog": 1,
+      "category": 3
+    }
+  }
+]

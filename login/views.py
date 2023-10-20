@@ -12,6 +12,8 @@ def home(request):
 
 
 def signup(request):
+    # TODO: Hacer que al registrar un usuario se mantenga logeado con el
+    #  usuario actual
     if request.method == 'GET':
         return render(request, 'signup.html', {
             'form': UserCreationForm()
