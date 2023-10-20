@@ -1,28 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema Contable CodeCrafters</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-
 <body>
-    <nav>
-        <ul>
-            <li><a href="{% url 'home' %}">Home</a></li>
-            <li><a href="{% url 'signup' %}">Signup</a></li>
-            {% if user.is_admin %}
-            <li><a href="{% url 'signup' %}">Signup</a></li>
-            {% endif %}
-            {% if user.is_authenticated %}
-            <li><a href="{% url 'logout' %}">Logout</a></li>
-            {% endif %}
+    <nav class="bg-gray-800 p-4">
+        <ul class="flex justify-between space-x-4 items-center">
+            <li>
+                <button id="menuButton" class="text-white group cursor-pointer">
+                    <i class="fas fa-bars text-sm"></i>
+                    <span style="margin-left: 8px;"></span>
+                </button>
+            </li>
+            <li class="text-white text-xl font-bold">Sistema Contable</li> <!-- Nuevo elemento -->
+            <li class="relative group userLink">
+                <a href="#" class="text-white group cursor-pointer">
+                    <i class="fas fa-user text-sm group-hover:block hidden"></i>
+                    <span style="margin-left: 8px;">{{ user.username }}</span>
+                </a>
+                <ul class="hidden absolute right-0 mt-2 bg-gray-800 text-white group-hover:block z-10 w-32 userDropdown">
+                    {% if user.is_superuser %}
+                    <li>
+                        <a href="{% url 'signup' %}" class="block p-2">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            <span>Signup</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    <li>
+                        <a href="{% url 'logout' %}" class="block p-2">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            <span> Logout</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </li>
         </ul>
     </nav>
-
-    {% block content %}
-    {% endblock %}
+    
+    <!-- Panel desplegable menu lateral -->
+    <div id="menuPanel" class="fixed top-0 left-0 h-full w-64 bg-gray-800 text-white p-4 transform -translate-x-full transition-transform duration-300 ease-in-out">
+        <!-- Contenido del menú -->
+        <div class="flex items-center justify-between mb-4">
+            <span class="text-white text-xl font-bold">Menú</span>
+            <button id="closeButton" class="text-white cursor-pointer">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <ul class="space-y-4">
+            <li><a href="#">Opción 1</a></li>
+            <li><a href="#">Opción 2</a></li>
+            <!-- Agrega más opciones según sea necesario -->
+        </ul>
+    </div>
+    
+    <div class="container mx-auto p-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <!-- Scripts -->
+    <script>
+        const menuButton = document.getElementById('menuButton');
+        const menuPanel = document.getElementById('menuPanel');
+        const closeButton = document.getElementById('closeButton');
+        const userLinks = document.querySelectorAll('.userLink');
+        const userDropdown = document.querySelector('.userDropdown');
+    
+        menuButton.addEventListener('click', () => {
+            if (!userDropdown.classList.contains('hidden')) {
+                userDropdown.classList.add('hidden');
+            }
+            menuPanel.classList.toggle('-translate-x-full');
+        });
+    
+        closeButton.addEventListener('click', () => {
+            menuPanel.classList.add('-translate-x-full');
+        });
+    
+        userLinks.forEach(userLink => {
+            userLink.addEventListener('click', () => {
+                if (!menuPanel.classList.contains('-translate-x-full')) {
+                    menuPanel.classList.add('-translate-x-full');
+                }
+                userDropdown.classList.toggle('hidden');
+            });
+        });
+    
+        // Cerrar el panel si se hace clic fuera del panel
+        window.addEventListener('click', (event) => {
+            if (!menuPanel.contains(event.target) && !menuButton.contains(event.target)) {
+                menuPanel.classList.add('-translate-x-full');
+            }
+        });
+    </script>
 </body>
-
 </html>
