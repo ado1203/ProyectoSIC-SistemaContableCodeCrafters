@@ -1,16 +1,17 @@
-<form method="post" action="{% url 'signin' %}">
-    <form action="/signin/" method="POST">
-        <h1>Inicio de sesión</h1>
-        {{ error }}
-        {% csrf_token %}
-        <div>
-            <label for="username">Nombre de usuario:</label>
-            <input type="text" name="username" id="username" required>
-        </div>
-        <div>
-            <label for="password">Contraseña:</label>
-            <input type="password" name="password" id="password" required>
-        </div>
-        <button>Aceptar</button>
-    </form>
+
+<form method="post" action="{% url 'signin' %}" class="max-w-md mx-auto p-4 bg-white shadow-md rounded-lg">
+    <h1 class="text-2xl font-bold text-center">Inicio de sesión</h1>
+    {{ error }}
+    {% csrf_token %}
+    <div class="mb-4">
+        <label for="username" class="block text-gray-600">Nombre de usuario:</label>
+        <input type="text" name="username" id="username" required
+               class="w-full px-3 py-2 border rounded-md shadow-sm focus:ring focus:ring-blue-200">
+    </div>
+    <div class="mb-4">
+        <label for="password" class="block text-gray-600">Contraseña:</label>
+        <input type="password" name="password" id="password" required
+               class="w-full px-3 py-2 border rounded-md shadow-sm focus:ring focus:ring-blue-200">
+    </div>
+    <button type="submit" class="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:ring focus:ring-blue-200">Aceptar</button>
 </form>
