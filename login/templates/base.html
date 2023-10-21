@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -8,21 +8,22 @@
 </head>
 
 <body>
-    <nav>
-        <ul>
-            <li><a href="{% url 'home' %}">Home</a></li>
-            <li><a href="{% url 'signup' %}">Signup</a></li>
-            {% if user.is_admin %}
-            <li><a href="{% url 'signup' %}">Signup</a></li>
-            {% endif %}
-            {% if user.is_authenticated %}
-            <li><a href="{% url 'logout' %}">Logout</a></li>
-            {% endif %}
-        </ul>
-    </nav>
+<nav>
+    <ul>
+        <li><a href="{% url 'home' %}">Home</a></li>
 
-    {% block content %}
-    {% endblock %}
+        {% if user.is_superuser %}
+            <li><a href="{% url 'signup' %}">Signup</a></li>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+{% block content %}
+{% endblock %}
 </body>
 
 </html>

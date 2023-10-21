@@ -3,7 +3,7 @@
     "model": "general_ledger.Catalog",
     "pk": 1,
     "fields": {
-      "catalog_name": "Catalog 1"
+      "name": "Catalog 1"
     }
   }
 ]
