@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Catalogo de cuentas</h1>
+
+    {% for account in accounts %}
+        <p>{{ account.code }} - {{ account.name }}</p>
+    {% endfor %}
+{% endblock %}
