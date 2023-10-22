@@ -1,0 +1,9 @@
+[
+  {
+    "model": "general_ledger.Catalog",
+    "pk": 1,
+    "fields": {
+      "name": "Catalog 1"
+    }
+  }
+]
