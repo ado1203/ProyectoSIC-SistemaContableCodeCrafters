@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Catalogo de cuentas</h1>
+    <h1>Catálogo de cuentas</h1>
 
-    {% for account in accounts %}
-        <p>{{ account.code }} - {{ account.name }}</p>
+    {% for category_name, accounts in categorized_accounts.items %}
+        <h1>{{ category_name }}</h1>
+        {% for account in accounts %}
+            <p>{{ account.code }} - {{ account.name }}</p>
+        {% endfor %}
+    {% empty %}
+        <p>No hay cuentas disponibles.</p>
     {% endfor %}
 {% endblock %}

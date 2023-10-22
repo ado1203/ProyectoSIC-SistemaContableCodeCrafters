@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=255, null=False)
+    name = models.CharField(max_length=255, null=False, blank=False)
 
     def __str__(self):
         return self.name
@@ -16,11 +16,14 @@ class Catalog(models.Model):
 
 
 class Account(models.Model):
-    code = models.CharField(max_length=255, null=False)
-    name = models.CharField(max_length=255, null=False)
-    balance = models.DecimalField(max_digits=10, decimal_places=2, null=False)
-    catalog = models.ForeignKey(Catalog, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    code = models.IntegerField(null=False, blank=False)
+    name = models.CharField(max_length=255, null=False, blank=False)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, null=False,
+                                  blank=False)
+    catalog = models.ForeignKey(Catalog, on_delete=models.CASCADE,
+                                null=False, blank=False)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,
+                                 null=False, blank=False)
 
     def __str__(self):
         return f'{self.code} - {self.name}'

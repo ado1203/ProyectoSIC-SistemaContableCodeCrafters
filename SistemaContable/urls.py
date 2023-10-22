@@ -22,9 +22,7 @@ from general_ledger import views as ledger_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', login_views.login_required(
-        LoginView.as_view(template_name='signin.html')), name='home'),
-    path('home/', login_views.home, name='home'),
+    path('', login_views.home, name='home'),
     path('account/', ledger_views.account, name='account'),
     path('account/create', ledger_views.create_account,
          name='create_account'),

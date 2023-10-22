@@ -2,13 +2,22 @@
 
 {% block content %}
     <h1>Crear cuenta</h1>
-
-    {{ error }}
+    
     <form action="/account/create" method="POST">
         {% csrf_token %}
-        {{ form }}
-        <button>
-            Guardar
-        </button>
+        {{ form.non_field_errors }}
+        <div class="field-wrapper">
+            <label for="{{ form.code.id_for_label }}">Código:</label>
+            {{ form.code }}
+        </div>
+        <div class="field-wrapper">
+            <label for="{{ form.name.id_for_label }}">Nombre de cuenta:</label>
+            {{ form.name }}
+        </div>
+        <div class="field-wrapper">
+            <label for="{{ form.category.id_for_label }}">Categoría:</label>
+            {{ form.category }}
+        </div>
+        <button type="submit">Guardar</button>
     </form>
 {% endblock %}
