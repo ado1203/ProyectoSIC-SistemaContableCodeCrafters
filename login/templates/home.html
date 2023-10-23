@@ -1,4 +1,36 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<h1>Home</h1>
+    <div class="flex justify-center items-center h-auto bg-gray-100">
+        <div class="max-w-3xl bg-white p-4 rounded-lg shadow-md border border-gray-200 animate__animated animate__fadeIn w-full flex flex-wrap-reverse md:flex-nowrap items-center">
+            <div class="md:w-1/2 md:pr-4">
+                <h1 class="text-3xl font-bold mb-2">Acerca de CodeCrafters S.A de C.V</h1>
+                <p>
+                    Aquí puedes describir una breve introducción sobre tu empresa, su misión, visión y valores. Cuéntales a los visitantes de la página quiénes son y qué hacen.
+                </p>
+            </div>
+            <div class="md:w-1/2">
+                <img src="https://cdn.discordapp.com/attachments/1154178710342217748/1163268607812317245/tinywow_change_bg_photo_37348541.png?ex=65482fd0&is=6535bad0&hm=7385c711c94026f446177b03dd5f841ad60ebbc86ca849d35ef0b756f3ef0da4&" alt="Texto alternativo de la imagen" class="w-full md:object-right">
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-center items-center h-auto bg-gray-100">
+        <div class="max-w-3xl bg-white p-4 rounded-lg shadow-md border border-gray-200 animate__animated animate__fadeIn animate__delay-2s w-full">
+            <h1 class="text-3xl font-bold mb-2">Nuestros Servicios</h1>
+            <p>
+                Describe aquí los servicios que tu empresa ofrece a tus clientes. Puedes enumerarlos y dar detalles sobre lo que incluyen.
+            </p>
+        </div>
+    </div>
+
+    <div class="flex justify-center items-center h-auto bg-gray-100">
+        <div class="max-w-3xl bg-white p-4 rounded-lg shadow-md border border-gray-200 animate__animated animate__fadeIn animate__delay-4s w-full">
+            <h1 class="text-3xl font-bold mb-2">Nuestra Trayectoria</h1>
+            <p>
+                Comparte la historia y los logros de tu empresa a lo largo del tiempo. Puedes destacar hitos importantes y tus objetivos futuros.
+            </p>
+        </div>
+    </div>
+
 {% endblock %}
