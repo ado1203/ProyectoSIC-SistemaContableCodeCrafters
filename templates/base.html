@@ -54,8 +54,13 @@
             </button>
         </div>
         <ul class="space-y-4">
-            <li><a href="#">Opción 1</a></li>
-            <li><a href="#">Opción 2</a></li>
+            <li><a href="{%url 'home'%}">Inicio</a></li>
+            <li><a href="{%url 'create_account' %}">Agregar cuenta</a></li>
+            <li><a href="{% url 'account' %}">Cátalgo de cuentas</a></li>
+            <li><a href="#">Registro de transacciones</a></li>
+            <li><a href="#">Libro Mayor</a></li>
+            <li><a href="#">Balance de comprobación</a></li>
+            <li><a href="#">Hoja de trabajo</a></li>
             <!-- Agrega más opciones según sea necesario -->
         </ul>
     </div>

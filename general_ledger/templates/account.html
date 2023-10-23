@@ -1,14 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Catálogo de cuentas</h1>
+    <div class="mt-4 ml-4"> <!-- Agregar margen superior e izquierdo -->
+        <h1 class="text-3xl font-bold mb-4">
+            <i class="fas fa-tasks"></i> Catálogo de cuentas
+        </h1>
 
-    {% for category_name, accounts in categorized_accounts.items %}
-        <h1>{{ category_name }}</h1>
-        {% for account in accounts %}
-            <p>{{ account.code }} - {{ account.name }}</p>
-        {% endfor %}
-    {% empty %}
-        <p>No hay cuentas disponibles.</p>
-    {% endfor %}
+        <table class="w-1/2 border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="text-left px-4 py-2" style="width: 3%;">Nº</th>
+                    <th class="text-left px-4 py-2" style="width: 5%;">Categoría</th>
+                    <th class="text-left px-4 py-2" style="width: 5%;">Código</th>
+                    <th class="text-left px-4 py-2" style="width: 40%;">Nombre de cuenta</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category_data in categorized_accounts %}
+                <tr>
+                    <td class="border border-gray-300 px-4 py-2" rowspan="{{ category_data.category.rowspan }}">{{ forloop.counter }}</td>
+                    <td class="border border-gray-300 px-4 py-2" rowspan="{{ category_data.category.rowspan }}"><strong>{{ category_data.category.name }}</strong></td>
+                </tr>
+                {% for account in category_data.accounts %}
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">{{ account.code }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ account.name }}</td>
+                    </tr>
+                {% endfor %}
+                {% empty %}
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2" colspan="4">No hay cuentas disponibles.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
