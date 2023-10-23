@@ -2,8 +2,8 @@
 
 {% block content %}
     <h1>Crear cuenta</h1>
-    
-    <form action="/account/create" method="POST">
+
+    <form action="/account/create/" method="POST">
         {% csrf_token %}
         {{ form.non_field_errors }}
         <div class="field-wrapper">

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .forms import AccountForm
-from .models import Account, Category
+from .forms import AccountForm, TransactionForm
+from .models import Account, Category, Transaction
 
 
 def account(request):
@@ -42,4 +42,32 @@ def create_account(request):
     return render(request, 'create_account.html', {
         'form': form,
         'categories': categories,
+    })
+
+
+def transaction(request):
+    if request.method == 'POST':
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            new_transaction = form.save(commit=False)
+            transaction_type = form.cleaned_data['transaction_type']
+            amount = request.POST.get('amount')
+
+            if transaction_type == 'debit':
+                new_transaction.transaction_debit_amount = amount
+            elif transaction_type == 'credit':
+                new_transaction.transaction_credit_amount = amount
+
+            new_transaction.ledger_id = 1
+            new_transaction.save()
+            return redirect('transaction')
+    else:
+        form = TransactionForm()
+
+    accounts = Account.objects.all()
+    transactions = Transaction.objects.all().order_by('-transaction_date')
+    return render(request, 'transaction.html', {
+        'form': form,
+        'accounts': accounts,
+        'transactions': transactions,
     })
