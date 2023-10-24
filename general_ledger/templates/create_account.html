@@ -7,7 +7,7 @@
         </h1>
 
         <div class="max-w-md"> <!-- Definir el ancho máximo del formulario -->
-            <form action="/account/create" method="POST" class="bg-gray-800 p-4 rounded-lg">
+            <form action="/account/create/" method="POST" class="bg-gray-800 p-4 rounded-lg">
                 {% csrf_token %}
                 {{ form.non_field_errors }}
 

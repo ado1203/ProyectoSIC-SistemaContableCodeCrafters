@@ -66,10 +66,9 @@
         <ul class="space-y-4">
             <li><a href="{%url 'home'%}">Inicio</a></li>
             <li><a href="{%url 'create_account' %}">Agregar cuenta</a></li>
-            <li><a href="{% url 'account' %}">Cátlogo de cuentas</a></li>
-            <li><a href="#">Registro de transacciones</a></li>
+            <li><a href="{%url 'account' %}">Cátlogo de cuentas</a></li>
+            <li><a href="{%url 'transaction'%}">Registro de transacciones</a></li>
             <li><a href="#">Libro Mayor</a></li>
-            <li><a href="#">Balance de comprobación</a></li>
             <li><a href="#">Hoja de trabajo</a></li>
             <!-- Agrega más opciones según sea necesario -->
         </ul>
@@ -89,12 +88,10 @@
     
         menuButton.addEventListener('click', () => {
             menuPanel.style.transform = 'translateX(0)';
-            contentDiv.style.transform = 'translateX(250px)'; // Ajusta el valor según el ancho del menú
         });
 
         closeButton.addEventListener('click', () => {
             menuPanel.style.transform = 'translateX(-100%)';
-            contentDiv.style.transform = 'translateX(0)';
         });
 
         // Desplegar menú de usuario
@@ -109,7 +106,6 @@
         window.addEventListener('click', (event) => {
             if (!menuPanel.contains(event.target) && !menuButton.contains(event.target)) {
                 menuPanel.style.transform = 'translateX(-100%)';
-                contentDiv.style.transform = 'translateX(0)';
             }
         });
     </script>
