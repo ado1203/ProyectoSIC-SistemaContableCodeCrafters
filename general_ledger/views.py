@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from .forms import AccountForm, TransactionForm
+from .forms import AccountForm, TransactionForm, LedgerForm
 from .models import Account, Category, Transaction, Ledger
+from django.shortcuts import get_object_or_404
 
 
-def account(request):
+def get_account_order_by_category():
     accounts = Account.objects.all().order_by('category__name', 'code')
 
     categorized_accounts = {}
@@ -20,6 +21,12 @@ def account(request):
     ordered_accounts = {
         category_name: categorized_accounts.get(category_name, []) for
         category_name in category_order}
+
+    return ordered_accounts
+
+
+def account(request):
+    ordered_accounts = get_account_order_by_category()
 
     return render(request, 'account.html', {
         'categorized_accounts': ordered_accounts
@@ -97,6 +104,32 @@ def transaction(request):
     return render(request, 'transaction.html', context)
 
 
-def ledger(request):
-    transactions = Transaction.objects.all()
-    return render(request, 'ledger.html')
+def ledgers(request):
+    if request.method == 'POST':
+        form = LedgerForm(request.POST)
+        if form.is_valid():
+            new_ledger = form.save(commit=False)
+            new_ledger.save()
+            return redirect('ledgers')
+    else:
+        form = LedgerForm()
+
+    return render(request, 'ledgers.html', {
+        'form': form,
+        'ledgers': Ledger.objects.all().order_by('-start_date'),
+    })
+
+
+def ledger(request, ledger_id):
+    ledger = get_object_or_404(Ledger, pk=ledger_id)
+
+    ordered_accounts = get_account_order_by_category()
+
+    transactions = Transaction.objects.filter(ledger=ledger).order_by(
+        'transaction_date')
+
+    return render(request, 'ledger.html', {
+        'ledger': ledger,
+        'categorized_accounts': ordered_accounts,
+        'transactions': transactions,
+    })
