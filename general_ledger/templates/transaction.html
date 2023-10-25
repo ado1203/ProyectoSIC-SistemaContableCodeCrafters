@@ -1,34 +1,42 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
     <h1>Registrar Nueva Transacción</h1>
 
     <form action="/transaction/" method="POST">
         {% csrf_token %}
+        {% if error_message %}
+            <p class="error-message">{{ error_message }}</p>
+        {% endif %}
         <label for="transaction_date">Fecha de Transacción</label>
-        <input type="datetime-local" name="transaction_date"
-               id="transaction_date" required>
-        <br>
+        <input
+                type="datetime-local"
+                name="transaction_date"
+                id="transaction_date"
+                required
+        />
+        <br/>
         <label for="account">Cuenta</label>
         <select name="account" id="account" required>
             {% for account in accounts %}
                 <option value="{{ account.id }}">{{ account.name }}</option>
             {% endfor %}
         </select>
-        <br>
+        <br/>
         <label for="transaction_type">Tipo de Transacción</label>
         <select name="transaction_type" id="transaction_type" required>
             <option value="debit">Debe</option>
             <option value="credit">Haber</option>
         </select>
-        <br>
+        <br/>
         <label for="amount">Monto</label>
-        <input type="number" name="amount" id="amount" required>
-        <br>
+        <input type="number" name="amount" id="amount" required/>
+        <br/>
         <label for="transaction_description">Descripción</label>
-        <input type="text" name="transaction_description"
-               id="transaction_description">
-        <br>
+        <input
+                type="text"
+                name="transaction_description"
+                id="transaction_description"
+        />
+        <br/>
         <button>Agregar</button>
     </form>
 
