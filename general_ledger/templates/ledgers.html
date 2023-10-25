@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Registra nuevo libro mayor</h1>
+
+    <form action="/ledgers/" method="POST">
+        {% csrf_token %}
+        <label for="start_date">Fecha de inicio</label>
+        <input type="date" name="start_date" id="start_date">
+        <br>
+        <label for="end_date">Fecha de fin</label>
+        <input type="date" name="end_date" id="end_date">
+        <br>
+        <button type="submit">Guardar</button>
+    </form>
+
+    <h1>Libros mayores</h1>
+
+    <ul>
+        {% for ledger in ledgers %}
+            <li>
+                <a href="{% url 'ledger' ledger.id %}">Fecha
+                    inicio: {{ ledger.start_date }} -
+                    Fecha
+                    final: {{ ledger.end_date }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
