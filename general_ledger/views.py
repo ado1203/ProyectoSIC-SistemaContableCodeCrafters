@@ -122,9 +122,7 @@ def ledgers(request):
 
 def ledger(request, ledger_id):
     ledger = get_object_or_404(Ledger, pk=ledger_id)
-
     ordered_accounts = get_account_order_by_category()
-
     transactions = Transaction.objects.filter(ledger=ledger).order_by(
         'transaction_date')
 

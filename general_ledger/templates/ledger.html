@@ -12,11 +12,13 @@
                     <th>Debe</th>
                     <th>Haber</th>
                 </tr>
-                {% for transaction in account.transactions.all %}
-                    <tr>
-                        <td>{{ transaction.transaction_debit_amount }}</td>
-                        <td>{{ transaction.transaction_credit_amount }}</td>
-                    </tr>
+                {% for transaction in transactions %}
+                    {% if transaction.account == account %}
+                        <tr>
+                            <td>{{ transaction.transaction_debit_amount }}</td>
+                            <td>{{ transaction.transaction_credit_amount }}</td>
+                        </tr>
+                    {% endif %}
                 {% empty %}
                     <tr>
                         <td colspan="2">No hay transacciones para esta
