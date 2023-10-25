@@ -5,33 +5,55 @@
         <h1 class="text-3xl font-semibold mb-4">
             <i class="fas fa-book"></i> Libro mayor
         </h1>
-        <a href="{%url 'ledgers'%}" class="text-blue-500 hover:text-blue-700">
+        <a href="{% url 'ledgers' %}" class="text-blue-500 hover:text-blue-700">
             <i class="fas fa-arrow-left"></i> Volver
         </a>
     </div>
-
     <h2 class="text-xl mb-8">{{ ledger.start_date }} - {{ ledger.end_date }}</h2>
+
     {% for category_name, accounts in categorized_accounts.items %}
         <h1 class="text-2xl font-semibold mt-6">{{ category_name }}</h1>
-        {% for account in accounts %}
-            <h2 class="text-xl font-semibold mt-4">{{ account.name }}</h2>
-            <table class="table-auto border-collapse border">
-                <tr class="bg-gray-200">
-                    <th class="border p-2">Debe</th>
-                    <th class="border p-2">Haber</th>
-                </tr>
-                {% for transaction in account.transactions.all %}
-                    <tr class="border">
-                        <td class="border p-2">{{ transaction.transaction_debit_amount }}</td>
-                        <td class="border p-2">{{ transaction.transaction_credit_amount }}</td>
-                    </tr>
-                {% empty %}
-                    <tr class="border">
-                        <td class="border p-2" colspan="2">No hay transacciones para esta cuenta.</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        {% endfor %}
+
+        <div class="flex flex-wrap">
+            {% for account in accounts %}
+                <div class="w-1/4 p-2">
+                    <h2 class="text-xl font-semibold">{{ account.name }}</h2>
+
+                    <table class="w-1/10 border border-collapse bg-white">
+                        <thead>
+                            <tr class="bg-gray-800 text-white">
+                                <th class="border p-1">Debe</th>
+                                <th class="border p-1">Haber</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for transaction in transactions %}
+                                {% if transaction.account == account %}
+                                    <tr class="border">
+                                        <td class="border p-1 w-1/10">{{ transaction.transaction_debit_amount }}</td>
+                                        <td class="border p-1 w-1/10">{{ transaction.transaction_credit_amount }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% empty %}
+                                <tr class="border">
+                                    <td class="border p-1 w-1/10" colspan="2">No hay transacciones para esta cuenta.</td>
+                                </tr>
+                            {% endfor %}
+                    
+                            {% for account_name, totals in account_totals.items %}
+                                {% if account_name == account.name %}
+                                <tr style="border: 2px solid black;">
+                                    <td style="border: 2px solid black; padding: 4px; width: 10%; font-weight: bold;">Total debe: {{ totals.debit_total }}</td>
+                                    <td style="border: 2px solid black; padding: 4px; width: 10%; font-weight: bold;">Total haber: {{ totals.credit_total }}</td>
+                                </tr>                                                                    
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
     {% empty %}
         <p class="text-lg mt-4">No hay cuentas disponibles.</p>
     {% endfor %}
