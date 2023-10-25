@@ -71,10 +71,8 @@ def transaction(request):
 
                     if transaction_type == 'debit':
                         new_transaction.transaction_debit_amount = amount
-                        new_transaction.transaction_credit_amount = 0
                     elif transaction_type == 'credit':
                         new_transaction.transaction_credit_amount = amount
-                        new_transaction.transaction_debit_amount = 0
 
                     new_transaction.ledger = ledger
                     new_transaction.save()
@@ -126,8 +124,27 @@ def ledger(request, ledger_id):
     transactions = Transaction.objects.filter(ledger=ledger).order_by(
         'transaction_date')
 
+    account_totals = {}
+    for transaction in transactions:
+        account_name = transaction.account.name
+        if account_name not in account_totals:
+            account_totals[account_name] = {
+                'debit_total': transaction.transaction_debit_amount,
+                'credit_total': transaction.transaction_credit_amount,
+            }
+        else:
+            account_totals[account_name][
+                'debit_total'] += transaction.transaction_debit_amount
+            account_totals[account_name][
+                'credit_total'] += transaction.transaction_credit_amount
+
+    # mostrar el total de cada cuenta en terminal
+    for account_name, totals in account_totals.items():
+        print(f'{account_name} - {totals["debit_total"]}')
+
     return render(request, 'ledger.html', {
         'ledger': ledger,
         'categorized_accounts': ordered_accounts,
         'transactions': transactions,
+        'account_totals': account_totals,
     })
