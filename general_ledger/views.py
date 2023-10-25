@@ -3,11 +3,9 @@ from .forms import AccountForm, TransactionForm, LedgerForm
 from .models import Account, Category, Transaction, Ledger
 from django.shortcuts import get_object_or_404
 
-
 def get_account_order_by_category():
     accounts = Account.objects.all().order_by('category__name', 'code')
 
-    # Organiza las cuentas en un diccionario categorizado
     categorized_accounts = {}
     for account in accounts:
         category_name = account.category.name
@@ -18,24 +16,20 @@ def get_account_order_by_category():
             }
         categorized_accounts[category_name]['accounts'].append(account)
 
-    # Define el orden específico de las categorías
     category_order = ["Activo", "Pasivo", "Patrimonio", "Gastos y Costos", "Ingresos"]
 
-    # Calcula el rowspan y agrega la información a categorized_accounts
     for category_name, data in categorized_accounts.items():
         category = data['category']
         accounts = data['accounts']
         rowspan = len(accounts) + 1
         category.rowspan = rowspan
 
-    # Organiza las categorías en el orden deseado
     ordered_categories = [categorized_accounts.get(category_name) for category_name in category_order]
 
-    return ordered_accounts
-
+    return ordered_categories
 
 def account(request):
-    ordered_accounts = get_account_order_by_category()
+    ordered_categories = get_account_order_by_category()
 
     return render(request, 'account.html', {
         'categorized_accounts': ordered_categories
@@ -51,7 +45,7 @@ def create_account(request):
     else:
         form = AccountForm()
 
-    categories = Category.objects.all()
+    categories = Category.objects.all()  # Corrección aquí
     return render(request, 'create_account.html', {
         'form': form,
         'categories': categories,
@@ -69,11 +63,9 @@ def transaction(request):
             amount = request.POST.get('amount')
 
             try:
-                ledger = Ledger.objects.get(start_date__lte=transaction_date,
-                                            end_date__gte=transaction_date)
+                ledger = Ledger.objects.get(start_date__lte=transaction_date, end_date__gte=transaction_date)
                 if ledger.is_balance_sheet:
-                    error_message = ('No se pueden agregar transacciones a un '
-                                     'libro mayor con cierre contable.')
+                    error_message = ('No se pueden agregar transacciones a un libro mayor con cierre contable.')
                 else:
                     new_transaction = form.save(commit=False)
 
@@ -90,11 +82,9 @@ def transaction(request):
                     return redirect('transaction')
             except Ledger.DoesNotExist:
                 error_message = (
-                    'No se puede agregar la transacción porque no '
-                    'existe un libro mayor para esa fecha.')
+                    'No se puede agregar la transacción porque no existe un libro mayor para esa fecha.')
         else:
-            error_message = ('Formulario no válido. Por favor, verifica los '
-                             'campos.')
+            error_message = ('Formulario no válido. Por favor, verifica los campos.')
 
     else:
         form = TransactionForm()
@@ -111,7 +101,6 @@ def transaction(request):
 
     return render(request, 'transaction.html', context)
 
-
 def ledgers(request):
     if request.method == 'POST':
         form = LedgerForm(request.POST)
@@ -127,17 +116,15 @@ def ledgers(request):
         'ledgers': Ledger.objects.all().order_by('-start_date'),
     })
 
-
 def ledger(request, ledger_id):
     ledger = get_object_or_404(Ledger, pk=ledger_id)
 
-    ordered_accounts = get_account_order_by_category()
+    ordered_categories = get_account_order_by_category()
 
-    transactions = Transaction.objects.filter(ledger=ledger).order_by(
-        'transaction_date')
+    transactions = Transaction.objects.filter(ledger=ledger).order_by('transaction_date')
 
     return render(request, 'ledger.html', {
         'ledger': ledger,
-        'categorized_accounts': ordered_accounts,
+        'categorized_accounts': ordered_categories,
         'transactions': transactions,
     })
