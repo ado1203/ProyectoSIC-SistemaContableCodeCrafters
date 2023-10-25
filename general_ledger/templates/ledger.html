@@ -40,13 +40,13 @@
                                     <td class="border p-1 w-1/10" colspan="2">No hay transacciones para esta cuenta.</td>
                                 </tr>
                             {% endfor %}
-                    
+
                             {% for account_name, totals in account_totals.items %}
                                 {% if account_name == account.name %}
                                 <tr style="border: 2px solid black;">
                                     <td style="border: 2px solid black; padding: 4px; width: 10%; font-weight: bold;">Total debe: {{ totals.debit_total }}</td>
                                     <td style="border: 2px solid black; padding: 4px; width: 10%; font-weight: bold;">Total haber: {{ totals.credit_total }}</td>
-                                </tr>                                                                    
+                                </tr>
                                 {% endif %}
                             {% endfor %}
                         </tbody>
@@ -57,4 +57,13 @@
     {% empty %}
         <p class="text-lg mt-4">No hay cuentas disponibles.</p>
     {% endfor %}
+    <br><br>
+    {% if not ledger.is_balance_sheet %}
+        <form action="{% url 'close_ledger' ledger.id %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Realizar cierre contable">
+        </form>
+    {% else %}
+        <h2>Balance de comprobación</h2>
+    {% endif %}
 {% endblock %}
