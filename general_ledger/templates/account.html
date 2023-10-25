@@ -1,20 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <style>
-        .vertical-align {
-            vertical-align: middle;
-        }
-    </style>
-
-    <div class="mt-4 ml-4">
+    <div class="mt-4 ml-4"> <!-- Agregar margen superior e izquierdo -->
         <h1 class="text-3xl font-bold mb-4">
             <i class="fas fa-tasks"></i> Catálogo de cuentas
         </h1>
 
         <table class="w-1/2 border-collapse border border-gray-300">
             <thead>
-                <tr class="bg-gray-800 text-white">
+                <tr class="bg-gray-800 text-white"> <!-- Cambiar el fondo y el color del texto para la fila de encabezados -->
                     <th class="text-left px-4 py-2" style="width: 3%;">Nº</th>
                     <th class="text-left px-4 py-2" style="width: 5%;">Categoría</th>
                     <th class="text-left px-4 py-2" style="width: 5%;">Código</th>
@@ -23,18 +17,18 @@
             </thead>
             <tbody>
                 {% for category_name, accounts in categorized_accounts.items %}
-                <tr class="bg-white">
-                    <td class="border border-gray-300 px-4 py-2 vertical-align">{{ forloop.counter }}</td>
-                    <td class="border border-gray-300 px-4 py-2 vertical-align"><strong>{{ category_name }}</strong></td>
+                <tr class="bg-white"> <!-- Establecer el fondo blanco para las filas de datos -->
+                    <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
+                    <td class="border border-gray-300 px-4 py-2"><strong>{{ category_name }}</strong></td>
                     <td class="border border-gray-300 px-4 py-2"></td>
                     <td class="border border-gray-300 px-4 py-2"></td>
                 </tr>
                 {% for account in accounts %}
                     <tr class="bg-white">
-                        <td class="border border-gray-300 px-4 py-2 vertical-align"></td>
-                        <td class="border border-gray-300 px-4 py-2 vertical-align"></td>
-                        <td class="border border-gray-300 px-4 py-2 vertical-align">{{ account.code }}</td>
-                        <td class="border border-gray-300 px-4 py-2 vertical-align">{{ account.name }}</td>
+                        <td class="border border-gray-300 px-4 py-2"></td>
+                        <td class="border border-gray-300 px-4 py-2"></td>
+                        <td class="border border-gray-300 px-4 py-2">{{ account.code }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ account.name }}</td>
                     </tr>
                 {% empty %}
                     <tr class="bg-white">

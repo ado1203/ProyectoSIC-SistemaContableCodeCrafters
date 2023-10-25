@@ -61,9 +61,23 @@
     {% if not ledger.is_balance_sheet %}
         <form action="{% url 'close_ledger' ledger.id %}" method="post">
             {% csrf_token %}
-            <input type="submit" value="Realizar cierre contable">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md" onclick="confirmCloseLedger(this);">
+                Realizar cierre contable
+            </button>
         </form>
     {% else %}
+        {% comment %} <span id="closeLedgerMessage" style="display: none; color: red; padding-left: 10px;">
+            <i class="fas fa-check-circle"></i> Cierre contable realizado
+        </span> {% endcomment %}
         <h2>Balance de comprobación</h2>
     {% endif %}
+    
+    <script>
+        function confirmCloseLedger(button) {
+            if (confirm('¿Está seguro de que desea realizar el cierre contable?')) {
+                button.style.display = 'none';
+                document.getElementById('closeLedgerMessage').style.display = 'inline';
+            }
+        }
+    </script>
 {% endblock %}
