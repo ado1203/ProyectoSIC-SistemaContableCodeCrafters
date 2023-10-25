@@ -28,6 +28,8 @@ urlpatterns = [
     path('transaction/', ledger_views.transaction, name='transaction'),
     path('ledgers/', ledger_views.ledgers, name='ledgers'),
     path('ledger/<int:ledger_id>/', ledger_views.ledger, name='ledger'),
+    path('ledger/<int:ledger_id>/close_ledger/', ledger_views.close_ledger,
+         name='close_ledger'),
     path('signup/', login_views.signup, name='signup'),
     path('logout/', login_views.signout, name='logout'),
     path('signin/', login_views.signin, name='signin'),

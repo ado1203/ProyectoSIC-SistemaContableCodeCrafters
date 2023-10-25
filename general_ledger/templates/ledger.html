@@ -49,4 +49,13 @@
             <p>No hay cuentas disponibles.</p>
         {% endfor %}
     {% endfor %}
+    <br><br>
+    {% if not ledger.is_balance_sheet %}
+        <form action="{% url 'close_ledger' ledger.id %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Realizar cierre contable">
+        </form>
+    {% else %}
+        <h2>Balance de comprobación</h2>
+    {% endif %}
 {% endblock %}
