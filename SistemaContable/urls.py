@@ -19,6 +19,7 @@ from django.urls import path
 from django.contrib.auth.views import LoginView
 from login import views as login_views
 from general_ledger import views as ledger_views
+from inventory import views as inventory_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,4 +30,5 @@ urlpatterns = [
     path('signup/', login_views.signup, name='signup'),
     path('logout/', login_views.signout, name='logout'),
     path('signin/', login_views.signin, name='signin'),
+    path('inventory/', inventory_views.inventory, name='inventory')
 ]
