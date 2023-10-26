@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Libro mayor</h1>
+    <h2>{{ ledger.start_date }} - {{ ledger.end_date }}</h2>
+    {% for category_name, accounts in categorized_accounts.items %}
+        <h1>{{ category_name }}</h1>
+        {% for account in accounts %}
+            <h2>{{ account.name }}</h2>
+            <table>
+                <tr>
+                    <th>Debe</th>
+                    <th>Haber</th>
+                </tr>
+                {% for transaction in transactions %}
+                    {% if transaction.account == account %}
+                        <tr>
+                            <td>{{ transaction.transaction_debit_amount }}</td>
+                            <td>{{ transaction.transaction_credit_amount }}</td>
+                        </tr>
+                    {% endif %}
+                {% empty %}
+                    <tr>
+                        <td colspan="2">No hay transacciones para esta
+                            cuenta.
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% for account_name, totals in account_totals.items %}
+                    {% if account_name == account.name %}
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><strong>Total
+                                debe: {{ totals.debit_total }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><strong>Total
+                                haber: {{ totals.credit_total }}</strong>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+        {% empty %}
+            <p>No hay cuentas disponibles.</p>
+        {% endfor %}
+    {% endfor %}
+    <br><br>
+    {% if not ledger.is_balance_sheet %}
+        <form action="{% url 'close_ledger' ledger.id %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Realizar cierre contable">
+        </form>
+    {% else %}
+        <h2>Balance de comprobación</h2>
+    {% endif %}
+{% endblock %}
