@@ -1,3 +1,4 @@
+from django.db.models import F
 from django.shortcuts import render, redirect
 from .forms import AccountForm, TransactionForm, LedgerForm
 from .models import Account, Category, Transaction, Ledger
@@ -61,11 +62,9 @@ def transaction(request):
             amount = request.POST.get('amount')
 
             try:
-                ledger = Ledger.objects.get(start_date__lte=transaction_date,
-                                            end_date__gte=transaction_date)
+                ledger = Ledger.objects.get(start_date__lte=transaction_date, end_date__gte=transaction_date)
                 if ledger.is_balance_sheet:
-                    error_message = ('No se pueden agregar transacciones a un '
-                                     'libro mayor con cierre contable.')
+                    error_message = ('No se pueden agregar transacciones a un libro mayor con cierre contable.')
                 else:
                     new_transaction = form.save(commit=False)
 
@@ -74,18 +73,16 @@ def transaction(request):
                     elif transaction_type == 'credit':
                         new_transaction.transaction_credit_amount = amount
 
+                    # Asigna el libro mayor actual a la transacción
                     new_transaction.ledger = ledger
                     new_transaction.save()
 
-                    return redirect('transaction')
+                    # Redirige a la página del libro mayor actual
+                    return redirect('ledger', ledger_id=ledger.id)
             except Ledger.DoesNotExist:
-                error_message = (
-                    'No se puede agregar la transacción porque no '
-                    'existe un libro mayor para esa fecha.')
+                error_message = ('No se puede agregar la transacción porque no existe un libro mayor para esa fecha.')
         else:
-            error_message = ('Formulario no válido. Por favor, verifica los '
-                             'campos.')
-
+            error_message = ('Formulario no válido. Por favor, verifica los campos.')
     else:
         form = TransactionForm()
 
@@ -100,6 +97,7 @@ def transaction(request):
     }
 
     return render(request, 'transaction.html', context)
+
 
 
 def ledgers(request):
@@ -124,23 +122,22 @@ def ledger(request, ledger_id):
     transactions = Transaction.objects.filter(ledger=ledger).order_by(
         'transaction_date')
 
-    # Obtén los totales de débito y crédito para cada cuenta
+    # Resetear los balances de las cuentas para este libro mayor
+    Account.objects.update(balance=0, balance_type='debit')
+
+    # Obtén los totales de débito y crédito para cada cuenta específicos para este libro mayor
     account_totals = get_account_totals(ledger)
 
-    # actualizar el balance de cada cuenta
+    # Actualizar el balance de cada cuenta para este libro mayor
     for account_name, totals in account_totals.items():
-        if totals['debit_total'] > totals['credit_total']:
-            account = Account.objects.get(name=account_name)
-            account.balance = totals['debit_total'] - totals[
-                'credit_total']
-            account.balance_type = 'debit'
-            account.save()
-        elif totals['credit_total'] > totals['debit_total']:
-            account = Account.objects.get(name=account_name)
-            account.balance = totals['credit_total'] - totals[
-                'debit_total']
+        account = Account.objects.get(name=account_name)
+        account.balance = totals['debit_total'] - totals['credit_total']
+        if account.balance < 0:
             account.balance_type = 'credit'
-            account.save()
+            account.balance = -account.balance
+        else:
+            account.balance_type = 'debit'
+        account.save()
 
     totals_balance_sheet = get_totals_balance_sheet()
 
@@ -165,21 +162,30 @@ def close_ledger(request, ledger_id):
 
 
 def get_account_totals(ledger):
+    accounts = Account.objects.all()
     account_totals = {}
-    transactions = Transaction.objects.filter(ledger=ledger)
-    for transaction in transactions:
-        account_name = transaction.account.name
-        if account_name not in account_totals:
-            account_totals[account_name] = {
-                'debit_total': 0,
-                'credit_total': 0,
-            }
-        account_totals[account_name][
-            'debit_total'] += transaction.transaction_debit_amount
-        account_totals[account_name][
-            'credit_total'] += transaction.transaction_credit_amount
+
+    for account in accounts:
+        debit_total = 0
+        credit_total = 0
+        # Calcula los totales de débito y crédito específicos para el libro mayor actual
+        transactions = Transaction.objects.filter(account=account, ledger=ledger)
+        for transaction in transactions:
+            debit_total += max(transaction.transaction_debit_amount, 0)  # Asegura que las cantidades sean positivas
+            credit_total += max(transaction.transaction_credit_amount, 0)  # Asegura que las cantidades sean positivas
+
+        if debit_total != credit_total:
+            # Maneja el desequilibrio aquí (por ejemplo, registra un error o realiza alguna acción específica)
+            pass
+
+        # Guarda los totales en el diccionario de totales de cuentas
+        account_totals[account.name] = {
+            'debit_total': debit_total,
+            'credit_total': credit_total,
+        }
 
     return account_totals
+
 
 
 def get_totals_balance_sheet():

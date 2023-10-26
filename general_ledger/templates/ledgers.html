@@ -26,7 +26,7 @@
 
 <ul class="pl-6">
     {% for ledger in ledgers %}
-        <li class="text-gray-500">
+        <li class="text-gray-500" >
             <i class="fas fa-arrow-right pr-2"></i>
             <a href="{% url 'ledger' ledger.id %}" class="text-blue-500 hover:underline">Fecha inicio: {{ ledger.start_date }} - Fecha final: {{ ledger.end_date }}</a>
         </li>
