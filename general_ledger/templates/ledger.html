@@ -4,90 +4,95 @@
 <div class="flex justify-between items-center">
     <h1 class="text-3xl font-semibold mb-4">
         <i class="fas fa-book"></i> Libro mayor  
-        <span id="closeLedgerMessage" style="display: none; color: green; padding-left: 10px;  font-size: 16px;">
+    </h1>
+    {% if ledger.is_balance_sheet %}
+        <span id="closeLedgerMessage" style="display: none; color: green; padding-left: 10px; font-size: 16px;">
             <i class="fas fa-check-circle"></i> Cierre contable realizado
         </span>
-    </h1>
+    {% endif %}
     <a href="{% url 'ledgers' %}" class="text-blue-500 hover:text-blue-700">
         <i class="fas fa-arrow-left"></i> Volver
     </a>
 </div>
-    <h2 class="text-xl mb-8">{{ ledger.start_date }} - {{ ledger.end_date }}</h2>
+<h2 class="text-xl mb-8">{{ ledger.start_date }} - {{ ledger.end_date }}</h2>
 
-    {% for category_name, accounts in categorized_accounts.items %}
-        <h1 class="text-2xl font-semibold mt-6">{{ category_name }}</h1>
+{% for category_name, accounts in categorized_accounts.items %}
+    <h1 class="text-2xl font-semibold mt-6">{{ category_name }}</h1>
 
-        <div class="flex flex-wrap">
-            {% for account in accounts %}
-                <div class="w-1/4 p-2">
-                    <h2 class="text-xl font-semibold">{{ account.name }}</h2>
+    <div class="flex flex-wrap">
+        {% for account in accounts %}
+            <div class="w-1/4 p-2">
+                <h2 class="text-xl font-semibold">{{ account.name }}</h2>
 
-                    <table class="w-1/10 border border-collapse bg-white">
-                        <thead>
-                            <tr class="bg-gray-800 text-white">
-                                <th class="border p-1">Debe</th>
-                                <th class="border p-1">Haber</th>
-                            </tr>
-                        </thead>
+                <table class="w-1/10 border border-collapse bg-white">
+                    <thead>
+                        <tr class="bg-gray-800 text-white">
+                            <th class="border p-1">Debe</th>
+                            <th class="border p-1">Haber</th>
+                        </tr>
+                    </thead>
 
-                        <tbody>
-                            {% for transaction in transactions %}
-                                {% if transaction.account == account %}
-                                    <tr class="border">
-                                        <td class="border p-1 w-1/10">{{ transaction.transaction_debit_amount }}</td>
-                                        <td class="border p-1 w-1/10">{{ transaction.transaction_credit_amount }}</td>
-                                    </tr>
-                                {% endif %}
-                            {% empty %}
+                    <tbody>
+                        {% for transaction in transactions %}
+                            {% if transaction.account == account %}
                                 <tr class="border">
-                                    <td class="border p-1 w-1/10" colspan="2">No hay transacciones para esta cuenta.</td>
+                                    <td class="border p-1 w-1/10">{{ transaction.transaction_debit_amount }}</td>
+                                    <td class="border p-1 w-1/10">{{ transaction.transaction_credit_amount }}</td>
                                 </tr>
-                            {% endfor %}
-                            
-                            {% for account_name, totals in account_totals.items %}
-                                {% if account_name == account.name %}
-                                <tr style="border: 2px solid black;">
-                                    <td style="border: 2px solid black; padding: 4px; width: 10%; font-weight: bold;">Total debe: {{ totals.debit_total }}</td>
-                                    <td style="border: 2px solid black; padding: 4px; width: 10%; font-weight: bold;">Total haber: {{ totals.credit_total }}</td>
-                                </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% endfor %}
-        </div>
-    {% empty %}
-        <p class="text-lg mt-4">No hay cuentas disponibles.</p>
-    {% endfor %}
-    <br><br>
-    {% if not ledger.is_balance_sheet %}
-        <form action="{% url 'close_ledger' ledger.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md" onclick="confirmCloseLedger(this);">
-                Realizar cierre contable
-            </button>
-        </form>
-    {% else %}
-      
-        <h2>Balance de comprobación</h2>
-    {% endif %}
-    
-    <script>
-        function confirmCloseLedger(button) {
-            if (confirm('¿Está seguro de que desea realizar el cierre contable?')) {
-                button.style.display = 'none';
-                document.getElementById('closeLedgerMessage').style.display = 'inline';
-                
-                // Almacenar el estado en localStorage
-                localStorage.setItem('isCloseLedgerMessageVisible', 'true');
-            }
-        }
-        
-        // Verificar y mostrar el mensaje al cargar la página
-        var isCloseLedgerMessageVisible = localStorage.getItem('isCloseLedgerMessageVisible');
-        if (isCloseLedgerMessageVisible) {
+                            {% endif %}
+                        {% empty %}
+                            <tr class="border">
+                                <td class="border p-1 w-1/10" colspan="2">No hay transacciones para esta cuenta.</td>
+                            </tr>
+                        {% endfor %}
+                        
+                        {% for account_name, totals in account_totals.items %}
+                            {% if account_name == account.name %}
+                            <tr style="border: 2px solid black;">
+                                <td style="border: 2px solid black; padding: 4px; width: 10%; font-weight: bold;">Total debe: {{ totals.debit_total }}</td>
+                                <td style="border: 2px solid black; padding: 4px; width: 10%; font-weight: bold;">Total haber: {{ totals.credit_total }}</td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+    </div>
+{% empty %}
+    <p class="text-lg mt-4">No hay cuentas disponibles.</p>
+{% endfor %}
+<br><br>
+{% if not ledger.is_balance_sheet %}
+    <form action="{% url 'close_ledger' ledger.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md" onclick="confirmCloseLedger(this);">
+            Realizar cierre contable
+        </button>
+    </form>
+{% else %}
+    <h2>Balance de comprobación</h2>
+{% endif %}
+<script>
+    function confirmCloseLedger(button) {
+        if (confirm('¿Está seguro de que desea realizar el cierre contable?')) {
+            button.style.display = 'none';
+            
+            // Almacenar el estado en localStorage con la fecha del libro mayor
+            var ledgerDate = "{{ ledger.start_date }} - {{ ledger.end_date }}";
+            localStorage.setItem(ledgerDate, 'true');
+            
+            // Mostrar el mensaje
             document.getElementById('closeLedgerMessage').style.display = 'inline';
         }
-    </script>
+    }
+    
+    // Verificar y mostrar el mensaje al cargar la página
+    var ledgerDate = "{{ ledger.start_date }} - {{ ledger.end_date }}";
+    var isCloseLedgerMessageVisible = localStorage.getItem(ledgerDate);
+    if (isCloseLedgerMessageVisible) {
+        document.getElementById('closeLedgerMessage').style.display = 'inline';
+    }
+</script>
+
 {% endblock %}
