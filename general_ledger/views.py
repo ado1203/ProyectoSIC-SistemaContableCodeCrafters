@@ -124,13 +124,32 @@ def ledger(request, ledger_id):
     transactions = Transaction.objects.filter(ledger=ledger).order_by(
         'transaction_date')
 
+    # Obtén los totales de débito y crédito para cada cuenta
     account_totals = get_account_totals(ledger)
+
+    # actualizar el balance de cada cuenta
+    for account_name, totals in account_totals.items():
+        if totals['debit_total'] > totals['credit_total']:
+            account = Account.objects.get(name=account_name)
+            account.balance = totals['debit_total'] - totals[
+                'credit_total']
+            account.balance_type = 'debit'
+            account.save()
+        elif totals['credit_total'] > totals['debit_total']:
+            account = Account.objects.get(name=account_name)
+            account.balance = totals['credit_total'] - totals[
+                'debit_total']
+            account.balance_type = 'credit'
+            account.save()
+
+    totals_balance_sheet = get_totals_balance_sheet()
 
     return render(request, 'ledger.html', {
         'ledger': ledger,
         'categorized_accounts': ordered_accounts,
         'transactions': transactions,
         'account_totals': account_totals,
+        'totals_balance_sheet': totals_balance_sheet,
     })
 
 
@@ -141,24 +160,6 @@ def close_ledger(request, ledger_id):
         # Asegúrate de que is_balance_sheet esté marcado como True
         ledger.is_balance_sheet = True
         ledger.save()
-
-        # Obtén los totales de débito y crédito para cada cuenta
-        account_totals = get_account_totals(ledger)
-
-        # actualizar el balance de cada cuenta
-        for account_name, totals in account_totals.items():
-            if totals['debit_total'] > totals['credit_total']:
-                account = Account.objects.get(name=account_name)
-                account.balance = totals['debit_total'] - totals[
-                    'credit_total']
-                account.balance_type = 'debit'
-                account.save()
-            elif totals['credit_total'] > totals['debit_total']:
-                account = Account.objects.get(name=account_name)
-                account.balance = totals['credit_total'] - totals[
-                    'debit_total']
-                account.balance_type = 'credit'
-                account.save()
 
         return redirect('ledger', ledger_id=ledger_id)
 
@@ -179,3 +180,20 @@ def get_account_totals(ledger):
             'credit_total'] += transaction.transaction_credit_amount
 
     return account_totals
+
+
+def get_totals_balance_sheet():
+    totals_balance_sheet = {
+        'debit_total': 0,
+        'credit_total': 0,
+    }
+
+    accounts = Account.objects.all()
+
+    for account in accounts:
+        if account.balance_type == 'debit':
+            totals_balance_sheet['debit_total'] += account.balance
+        elif account.balance_type == 'credit':
+            totals_balance_sheet['credit_total'] += account.balance
+
+    return totals_balance_sheet
