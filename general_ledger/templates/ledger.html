@@ -42,6 +42,9 @@
                                 haber: {{ totals.credit_total }}</strong>
                             </td>
                         </tr>
+                        <tr>
+                            <td colspan="2"><strong>Diferencia:
+                                {{ account.balance }}</strong></td>
                     {% endif %}
                 {% endfor %}
             </table>
@@ -50,36 +53,46 @@
         {% endfor %}
     {% endfor %}
     <br><br>
-
-    <h2>Balance de comprobación</h2>
-    <table>
-        <tr>
-            <th>Cuenta</th>
-            <th>Debe</th>
-            <th>Haber</th>
-        </tr>
-        {% for category_name, accounts in categorized_accounts.items %}
-            {% for account in accounts %}
-                <tr>
-                    <td>{{ account.name }}</td>
-                    {% if account.balance_type == 'debit' %}
-                        <td></td>
-                        <td>{{ account.balance }}</td>
-                    {% else %}
-                        <td>{{ account.balance }}</td>
-                        <td></td>
-                    {% endif %}
-                </tr>
+    <button id="showBalanceButton" onclick="{% url 'ledger' ledger.id %}">Ver Balance de comprobacion</button>
+    <div  id="balanceTable"  style="display:none;">
+        <h2>Balance de comprobación</h2>
+        <table>
+            <tr>
+                <th>Cuenta</th>
+                <th>Debe</th>
+                <th>Haber</th>
+            </tr>
+            {% for category_name, accounts in categorized_accounts.items %}
+                {% for account in accounts %}
+                    <tr>
+                        <td>{{ account.name }}</td>
+                        {% if account.balance_type == 'credit' %}
+                            <td></td>
+                            <td>{{ account.balance }}</td>
+                        {% else %}
+                            <td>{{ account.balance }}</td>
+                            <td></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-        <tr>
-            <td><strong>Total</strong></td>
-            <td><strong>{{ totals_balance_sheet.credit_total }}</strong>
-            </td>
-            <td><strong>{{ totals_balance_sheet.debit_total }}</strong>
-            </td>
-        </tr>
-    </table>
+            <tr>
+                <td><strong>Total</strong></td>
+                <td>
+                    <strong>
+                     {{ totals_balance_sheet.debit_total }} 
+                    </strong>
+                </td>
+                <td>
+                    <strong>
+                        {{ totals_balance_sheet.credit_total }}
+                    </strong>
+                </td>
+            </tr>
+        </table>
+       
+    </div> 
+    
     <br><br>
     {% if not ledger.is_balance_sheet %}
         <form action="{% url 'close_ledger' ledger.id %}" method="post">
@@ -87,4 +100,24 @@
             <input type="submit" value="Realizar cierre contable">
         </form>
     {% endif %}
+
+    <script>
+        // Obten el botón y el div que contiene la tabla del balance
+        var showBalanceButton = document.getElementById('showBalanceButton');
+        var balanceTable = document.getElementById('balanceTable');
+    
+        // Agrega un controlador de eventos al botón
+        showBalanceButton.addEventListener('click', function() {
+            if (balanceTable.style.display === 'none') {
+                // Si el contenido está oculto, muéstralo
+                balanceTable.style.display = 'block';
+            } else {
+                // Si el contenido está visible, ocúltalo
+                balanceTable.style.display = 'none';
+            }
+        });
+    </script>
+    
+    
+
 {% endblock %}
