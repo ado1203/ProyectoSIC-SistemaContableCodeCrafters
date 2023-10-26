@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Nuevo movimiento de inventario</h1>
+    <p>❤Hacia la libertad por la cultura❤</p>
+    <form action="{% url 'inventory' %}" method="POST">
+        {% csrf_token %}
+        <label for="move_date">Fecha del movimiento</label>
+        <input type="date" name="move_date" id="move_date" required><br>
+        <label for="move_description">Descripcion del movimiento</label>
+        <input type="text" name="move_description" id="move_description" required><br>
+        <label for="move_type">Tipo de movimiento</label>
+        <select name="move_type" id="move_type" required>
+            <option value="output">Salida</option>
+            <option value="input">Entrada</option>
+        </select><br>
+        <label for="move_quantity">Cantidad</label>
+        <input type="number" name="move_quantity" id="move_quantity" required><br>
+
+        <!-- Input para ingresar precio, es decir, decimales -->
+        <label for="move_unitPrice">Precio unitario</label>
+        <input type="text" name="move_unitPrice" id="move_unitPrice" required><br>
+
+        {% comment %} Visibilidad de stock, display: none {% endcomment %}
+        <label for="stock" style="display: none;">Stock</label>
+        {% comment %} Visibilidad de stock, display: none {% endcomment %}
+        <select name="stock" id="stock" style="display: none;">
+            {% for stock in stocks %}
+                <option value="{{ stock.id }}">{{ stock.stock_name }}</option>
+            {% endfor %}
+        </select><br>
+        <button type="submit">
+            Guardar
+        </button>
+    </form>
+
+    <h1>Registro de inventario</h1>
+    
+    <!-- Mostrar el valor del inventario -->
+    {%for stock in stocks%}
+    <p>Valor del inventario: {{stock.stock_price}}</p>
+    {%endfor%}
+    <!-- Mostrar el valor del inventario -->
+
+    <table>
+        <thead>
+        <tr>
+            <th colspan="15">Inventario de Software de CodeCrafters S.A. de C.V.</th>
+        </tr>
+        <tr>
+            <th rowspan="2">Fecha</th>
+            <th rowspan="2">Descripcion</th>
+            <th colspan="3">Entradas</th>
+            <th colspan="3">Salidas</th>
+            <th colspan="3">Existencias</th>
+        </tr>
+        <tr>
+            <th>Cantidad</th>
+            <th>Costo</th>  <!-- Añadido para mostrar el precio unitario -->
+            <th>Total</th>
+            <th>Cantidad</th>
+            <th>Costo</th>
+            <th>Total</th>
+            <th>Cantidad</th>
+            <th>Costo</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        {% for move in moves %}
+            <tr>
+                <td>{{ move.move_date }}</td>
+                <td>{{ move.move_description }}</td>
+                {% if move.move_type == "input" %}
+                    <td>{{ move.move_quantity }}</td>
+                    <td>{{ move.move_unitPrice }}</td>
+                    <!-- Mostrar precio unitario solo para movimientos de entrada -->
+                    <td>{{ move.move_price }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                {% elif move.move_type == "output" %}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ move.move_quantity }}</td>
+                    <td>{{ move.stock_unitPrice }}</td>
+                    <!-- Mostrar precio unitario solo para movimientos de entrada -->
+                    <td>{{ move.move_price }}</td>
+                {% endif %}
+                <td>{{ move.stock_quantity }}</td>
+                <td>{{ move.stock_unitPrice }}</td>
+                <td>{{ move.stock_price }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
