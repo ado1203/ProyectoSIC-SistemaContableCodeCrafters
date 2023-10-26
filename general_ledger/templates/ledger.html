@@ -50,12 +50,41 @@
         {% endfor %}
     {% endfor %}
     <br><br>
+
+    <h2>Balance de comprobación</h2>
+    <table>
+        <tr>
+            <th>Cuenta</th>
+            <th>Debe</th>
+            <th>Haber</th>
+        </tr>
+        {% for category_name, accounts in categorized_accounts.items %}
+            {% for account in accounts %}
+                <tr>
+                    <td>{{ account.name }}</td>
+                    {% if account.balance_type == 'debit' %}
+                        <td></td>
+                        <td>{{ account.balance }}</td>
+                    {% else %}
+                        <td>{{ account.balance }}</td>
+                        <td></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        <tr>
+            <td><strong>Total</strong></td>
+            <td><strong>{{ totals_balance_sheet.credit_total }}</strong>
+            </td>
+            <td><strong>{{ totals_balance_sheet.debit_total }}</strong>
+            </td>
+        </tr>
+    </table>
+    <br><br>
     {% if not ledger.is_balance_sheet %}
         <form action="{% url 'close_ledger' ledger.id %}" method="post">
             {% csrf_token %}
             <input type="submit" value="Realizar cierre contable">
         </form>
-    {% else %}
-        <h2>Balance de comprobación</h2>
     {% endif %}
 {% endblock %}
