@@ -1,123 +1,137 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Libro mayor</h1>
-    <h2>{{ ledger.start_date }} - {{ ledger.end_date }}</h2>
-    {% for category_name, accounts in categorized_accounts.items %}
-        <h1>{{ category_name }}</h1>
+
+{% comment %} Actualizar pagina pagina {% endcomment %}
+<a href="{% url 'ledger' ledger.id %}?random={{ request.session.session_key }}"><p style=" color: red;"> Si los datos no se actualizan correctactamente haz  clic aqui</p></a>
+<br></br>
+<div class="flex justify-between items-center">
+    <h1 class="text-3xl font-semibold mb-4">
+        <i class="fas fa-book"></i> Libro mayor  
+    </h1>
+     
+    {% if ledger.is_balance_sheet %}
+        <span id="closeLedgerMessage" style="display: none; color: green; padding-left: 10px; font-size: 16px;">
+            <i class="fas fa-check-circle"></i> Cierre contable realizado
+        </span>
+    {% endif %}
+    <a href="{% url 'ledgers' %}" class="text-blue-500 hover:text-blue-700">
+        <i class="fas fa-arrow-left"></i> Volver
+    </a>
+</div>
+<h2 class="text-xl mb-8">{{ ledger.start_date }} - {{ ledger.end_date }}</h2>
+
+{% for category_name, accounts in categorized_accounts.items %}
+    <h1 class="text-2xl font-semibold mt-6">{{ category_name }}</h1>
+
+    <div class="flex flex-wrap">
         {% for account in accounts %}
-            <h2>{{ account.name }}</h2>
-            <table>
-                <tr>
-                    <th>Debe</th>
-                    <th>Haber</th>
-                </tr>
-                {% for transaction in transactions %}
-                    {% if transaction.account == account %}
-                        <tr>
-                            <td>{{ transaction.transaction_debit_amount }}</td>
-                            <td>{{ transaction.transaction_credit_amount }}</td>
+            <div class="w-1/4 p-2">
+                <h2 class="text-xl font-semibold" style="text-align: center;">{{ account.name }}</h2>
+
+                <table class="w-1/10 border border-collapse bg-white">
+                    <thead>
+                        <tr class="bg-gray-800 text-white">
+                            <th class="border p-1">Debe</th>
+                            <th class="border p-1">Haber</th>
                         </tr>
-                    {% endif %}
-                {% empty %}
-                    <tr>
-                        <td colspan="2">No hay transacciones para esta
-                            cuenta.
-                        </td>
-                    </tr>
-                {% endfor %}
-                {% for account_name, totals in account_totals.items %}
-                    {% if account_name == account.name %}
-                        <tr>
-                            <td colspan="2">
-                                <hr>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><strong>Total
-                                debe: {{ totals.debit_total }}</strong></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><strong>Total
-                                haber: {{ totals.credit_total }}</strong>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><strong>Diferencia:
-                                {{ account.balance }}</strong></td>
-                    {% endif %}
-                {% endfor %}
-            </table>
-        {% empty %}
-            <p>No hay cuentas disponibles.</p>
+                    </thead>
+
+                    <tbody>
+                        {% for transaction in transactions %}
+                            {% if transaction.account == account %}
+                                <tr class="border">
+                                    <td class="border p-1 w-1/10">{{ transaction.transaction_debit_amount }}</td>
+                                    <td class="border p-1 w-1/10">{{ transaction.transaction_credit_amount }}</td>
+                                </tr>
+                            {% endif %}
+                        {% empty %}
+                            <tr class="border">
+                                <td class="border p-1 w-1/10" colspan="2">No hay transacciones para esta cuenta.</td>
+                            </tr>
+                        {% endfor %}
+                        
+                        {% for account_name, totals in account_totals.items %}
+                            {% if account_name == account.name %}
+                            <tr style="border: 2px solid black;">
+                                <td style="border: 2px solid black; padding: 4px; width: 10%; font-weight: bold;">Total debe: {{ totals.debit_total }}</td>
+                                <td style="border: 2px solid black; padding: 4px; width: 10%; font-weight: bold;">Total haber: {{ totals.credit_total }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align: center;">
+                                    <strong>Diferencia:
+                                        {{ account.balance }}
+                                    </strong>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% endfor %}
-    {% endfor %}
-    <br><br>
-    <button id="showBalanceButton" onclick="{% url 'ledger' ledger.id %}">Ver Balance de comprobacion</button>
-    <div  id="balanceTable"  style="display:none;">
-        <h2>Balance de comprobación</h2>
-        <table>
-            <tr>
-                <th>Cuenta</th>
-                <th>Debe</th>
-                <th>Haber</th>
+    </div>
+{% empty %}
+    <p class="text-lg mt-4">No hay cuentas disponibles.</p>
+{% endfor %}
+<br><br>
+
+        <h2 class="text-3xl font-semibold mb-4">Balance de comprobación</h2>
+        
+        <table class="w-1/10 border border-collapse bg-white">
+            <tr  class="bg-gray-800 text-white">
+                <th class="border p-1">Cuenta</th>
+                <th class="border p-1">Debe</th>
+                <th class="border p-1">Haber</th>
             </tr>
-            {% for category_name, accounts in categorized_accounts.items %}
+            {% for  category_name, accounts in categorized_accounts.items %}
                 {% for account in accounts %}
-                    <tr>
-                        <td>{{ account.name }}</td>
+                    <tr class="border">
+                        <td td class="border p-1 w-1/10">{{ account.name }}</td>
                         {% if account.balance_type == 'credit' %}
-                            <td></td>
-                            <td>{{ account.balance }}</td>
+                            <td class="border p-1 w-1/10"></td>
+                            <td class="border p-1 w-1/10">{{ account.balance }}</td>
                         {% else %}
-                            <td>{{ account.balance }}</td>
-                            <td></td>
+                            <td class="border p-1 w-1/10">{{ account.balance }}</td>
+                            <td class="border p-1 w-1/10"></td>
                         {% endif %}
                     </tr>
                 {% endfor %}
             {% endfor %}
-            <tr>
-                <td><strong>Total</strong></td>
-                <td>
+            <tr style="border: 2px solid black;">
+                <td style="border: 2px solid black; padding: 4px; width: 10%; font-weight: bold;"><strong>Total</strong></td>
+                <td style="border: 2px solid black; padding: 4px; width: 10%; font-weight: bold;">
                     <strong>
                      {{ totals_balance_sheet.debit_total }} 
                     </strong>
                 </td>
-                <td>
+                <td style="border: 2px solid black; padding: 4px; width: 10%; font-weight: bold;">
                     <strong>
                         {{ totals_balance_sheet.credit_total }}
                     </strong>
                 </td>
             </tr>
-        </table>
+        </table>  
        
-    </div> 
-    
-    <br><br>
-    {% if not ledger.is_balance_sheet %}
-        <form action="{% url 'close_ledger' ledger.id %}" method="post">
-            {% csrf_token %}
-            <input type="submit" value="Realizar cierre contable">
-        </form>
-    {% endif %}
+<br><br>
+{% if not ledger.is_balance_sheet %}
+    <form action="{% url 'close_ledger' ledger.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="bg-green-900 hover-bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="return confirm('¿Está seguro de que desea realizar el cierre contable?');">
+            Realizar cierre contable
+        </button>
+        
+    </form>
+{% endif %}
 
-    <script>
-        // Obten el botón y el div que contiene la tabla del balance
-        var showBalanceButton = document.getElementById('showBalanceButton');
-        var balanceTable = document.getElementById('balanceTable');
+<script>
     
-        // Agrega un controlador de eventos al botón
-        showBalanceButton.addEventListener('click', function() {
-            if (balanceTable.style.display === 'none') {
-                // Si el contenido está oculto, muéstralo
-                balanceTable.style.display = 'block';
-            } else {
-                // Si el contenido está visible, ocúltalo
-                balanceTable.style.display = 'none';
-            }
-        });
-    </script>
-    
-    
+    // Verificar y mostrar el mensaje al cargar la página
+    var ledgerDate = "{{ ledger.start_date }} - {{ ledger.end_date }}";
+    var isCloseLedgerMessageVisible = localStorage.getItem(ledgerDate);
+    if (isCloseLedgerMessageVisible) {
+        document.getElementById('closeLedgerMessage').style.display = 'inline';
+    }
+</script>
 
 {% endblock %}

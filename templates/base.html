@@ -1,29 +1,118 @@
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Sistema Contable CodeCrafters</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
 </head>
+<body class="bg-gray-200">
+    <style>
+        /* Cambia el color del texto y el fondo al pasar el ratón sobre las opciones del menú */
+        #menuPanel a:hover {
+            color: #000 !important; /* Cambia el color del texto */
+            background-color: #fff !important; /* Cambia el color de fondo */
+        }
+        /* Cambia el color del texto y el fondo al pasar el ratón sobre las opciones del menú de usuario */
+        .userDropdown a:hover {
+            color: #fff !important; /* Cambia el color del texto */
+            background-color: #000 !important; /* Cambia el color de fondo */
+        }
+    </style>
+    <nav class="bg-gray-800 p-4">
+        <div class="flex justify-between items-center">
+            <button id="menuButton" class="text-white cursor-pointer">
+                <i class="fas fa-bars text-lg"></i>
+            </button>
+            <div class="text-white text-2xl font-bold">Sistema Contable</div>
+            <div class="relative group userLink">
+                <a href="#" class="text-white group cursor-pointer">
+                    <i class="fas fa-user text-sm group-hover:block hidden"></i>
+                    <span class="ml-2">{{ user.username }}</span>
+                </a>
+                <ul class="hidden absolute right-0 mt-2 bg-gray-800 text-white group-hover:block z-10 w-32 userDropdown">
+                    {% if user.is_superuser %}
+                    <li>
+                        <a href="{% url 'signup' %}" class="block p-2">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            <span>Signup</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    <li>
+                        <a href="{% url 'logout' %}" class="block p-2">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Panel desplegable menu lateral -->
+    <div id="menuPanel" class="fixed top-0 left-0 h-full w-64 bg-gray-800 text-white p-4 transform -translate-x-full transition-transform duration-300 ease-in-out">
+        <!-- Contenido del menú -->
+        <div class="flex items-center justify-between mb-4">
+            <span class="text-white text-xl font-bold">Menú</span>
+            <button id="closeButton" class="text-white cursor-pointer">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <ul class="space-y-4">
+            <li><a href="{%url 'home'%}">Inicio</a></li>
+            <li><a href="{%url 'create_account' %}">Agregar cuenta</a></li>
+            <li><a href="{%url 'account' %}">Cátlogo de cuentas</a></li>
+            <li><a href="{%url 'transaction'%}">Registro de transacciones</a></li>
+            <li><a href="{%url 'ledgers'%}">Libro Mayor</a></li>
+            <li><a href="{%url 'inventory'%}">Inventario</a></li>
+            <!-- Agrega más opciones según sea necesario  -->
+        </ul>
+    </div>
+    
+    <div id="contentDiv" class="container mx-auto p-4 md:p-8">
+        {% block content %}
+        {% endblock %}
+    </div>
 
-<body>
-<nav>
-    <ul>
-        <li><a href="{% url 'home' %}">Home</a></li>
+    <!-- Scripts -->
+    <script>
+        const menuButton = document.getElementById('menuButton');
+        const menuPanel = document.getElementById('menuPanel');
+        const contentDiv = document.getElementById('contentDiv');
+        const closeButton = document.getElementById('closeButton');
+    
+        menuButton.addEventListener('click', () => {
+            menuPanel.style.transform = 'translateX(0)';
+        });
 
-        {% if user.is_superuser %}
-            <li><a href="{% url 'signup' %}">Signup</a></li>
-        {% endif %}
+        closeButton.addEventListener('click', () => {
+            menuPanel.style.transform = 'translateX(-100%)';
+        });
 
-        {% if user.is_authenticated %}
-            <li><a href="{% url 'logout' %}">Logout</a></li>
-        {% endif %}
-    </ul>
-</nav>
+        // Desplegar menú de usuario
+        const userLink = document.querySelector('.userLink');
+        const userDropdown = document.querySelector('.userDropdown');
+        
+        userLink.addEventListener('click', () => {
+            userDropdown.classList.toggle('hidden');
+        });
 
-{% block content %}
-{% endblock %}
+        // Cerrar el menú si se hace clic fuera del menú
+        window.addEventListener('click', (event) => {
+            if (!menuPanel.contains(event.target) && !menuButton.contains(event.target)) {
+                menuPanel.style.transform = 'translateX(-100%)';
+            }
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.js"></script>
 </body>
-
 </html>

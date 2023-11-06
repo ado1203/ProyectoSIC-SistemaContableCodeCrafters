@@ -1,0 +1,10 @@
+{
+    "model": "inventory.Stock",
+    "pk": 1,
+    "fields": {
+        "stock_name": "Existencias",
+        "stock_quantity": 0,
+        "stock_unitPrice": "0.00",
+        "stock_price": "0.00"
+    }
+}

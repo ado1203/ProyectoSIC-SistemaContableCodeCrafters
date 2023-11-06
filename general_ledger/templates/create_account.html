@@ -1,20 +1,32 @@
-{% extends 'base.html' %} {% block content %}
-<h1>Crear cuenta</h1>
+{% extends 'base.html' %} 
+{% block content %}
+    <div class="mt-8 ml-10"> <!-- Agregar un margen en la parte superior y en el lado izquierdo del contenido -->
+        <h1 class="text-3xl font-bold mb-4">
+            <i class="fas fa-university"></i> Crear Cuenta
+        </h1>
 
-<form action="/account/create/" method="POST">
-  {% csrf_token %} {{ form.non_field_errors }}
-  <div class="field-wrapper">
-    <label for="{{ form.code.id_for_label }}">Código:</label>
-    {{ form.code }}
-  </div>
-  <div class="field-wrapper">
-    <label for="{{ form.name.id_for_label }}">Nombre de cuenta:</label>
-    {{ form.name }}
-  </div>
-  <div class="field-wrapper">
-    <label for="{{ form.category.id_for_label }}">Categoría:</label>
-    {{ form.category }}
-  </div>
-  <button type="submit">Guardar</button>
-</form>
+        <div class="max-w-md"> <!-- Definir el ancho máximo del formulario -->
+            <form action="/account/create/" method="POST" class="bg-gray-800 p-4 rounded-lg">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="mb-4 flex items-center">
+                    <label for="{{ form.code.id_for_label }}" requerid class="text-xl text-white font-bold mr-2">Código:</label>
+                    {{ form.code }}
+                </div>
+
+                <div class="mb-4 flex items-center">
+                    <label for="{{ form.name.id_for_label }}" requerid class="text-xl text-white font-bold mr-2">Nombre de cuenta:</label>
+                    {{ form.name }}
+                </div>
+
+                <div class="mb-4 flex items-center">
+                    <label for="{{ form.category.id_for_label }}" requerid class="text-xl text-white font-bold mr-2">Categoría:</label>
+                    {{ form.category }}
+                </div>
+
+                <button type="submit" class="bg-blue-500 hover-bg-blue-700 text-white font-bold py-2 px-4 rounded">Guardar</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}

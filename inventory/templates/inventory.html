@@ -1,96 +1,113 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Nuevo movimiento de inventario</h1>
-    <p>❤Hacia la libertad por la cultura❤</p>
-    <form action="{% url 'inventory' %}" method="POST">
-        {% csrf_token %}
-        <label for="move_date">Fecha del movimiento</label>
-        <input type="date" name="move_date" id="move_date" required><br>
-        <label for="move_description">Descripcion del movimiento</label>
-        <input type="text" name="move_description" id="move_description" required><br>
-        <label for="move_type">Tipo de movimiento</label>
-        <select name="move_type" id="move_type" required>
+<h1 class="text-3xl font-bold mb-4">
+    <i class="fas fa-plus-circle"></i> Nuevo movimiento de inventario
+</h1>
+
+<form action="{% url 'inventory' %}" method="POST" class="w-full max-w-md p-4 border border-gray-300 bg-gray-800 text-white rounded-md">
+    {% csrf_token %}
+    <div class="mb-4 flex items-center">
+        <label for="move_date" class="w-1/4 text-left text-gray-300">Fecha del movimiento</label>
+        <input type="date" name="move_date" id="move_date" required class="w-3/4 p-2 border rounded-md text-gray-700">
+    </div>
+    <div class="mb-4 flex items-center">
+        <label for="move_description" class="w-1/4 text-left text-gray-300">Descripción del movimiento</label>
+        <input type="text" name="move_description" id="move_description" required class="w-3/4 p-2 border rounded-md text-gray-700">
+    </div>
+    <div class="mb-4 flex items-center">
+        <label for="move_type" class="w-1/4 text-left text-gray-300">Tipo de movimiento</label>
+        <select name="move_type" id="move_type" required class="w-3/4 p-2 border rounded-md text-gray-700">
             <option value="output">Salida</option>
             <option value="input">Entrada</option>
-        </select><br>
-        <label for="move_quantity">Cantidad</label>
-        <input type="number" name="move_quantity" id="move_quantity" required><br>
+        </select>
+    </div>
+    <div class="mb-4 flex items-center">
+        <label for="move_quantity" class="w-1/4 text-left text-gray-300">Cantidad</label>
+        <input type="number" name="move_quantity" id="move_quantity" required class="w-3/4 p-2 border rounded-md text-gray-700">
+    </div>
+    <div class="mb-4 flex items-center">
+        <label for="move_unitPrice" class="w-1/4 text-left text-gray-300">Precio unitario</label>
+        <input type="text" name="move_unitPrice" id="move_unitPrice" required class="w-3/4 p-2 border rounded-md text-gray-700">
+    </div>
+    
+    <label for="stock" style="display: none;">Stock</label>
+    {% comment %} Visibilidad de stock, display: none {% endcomment %}
+    <select name="stock" id="stock" style="display: none;">
+        {% for stock in stocks %}
+            <option value="{{ stock.id }}">{{ stock.stock_name }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md" onclick="return confirm('¿Desea guardar los datos?');">Guardar</button>
+</form>
 
-        <!-- Input para ingresar precio, es decir, decimales -->
-        <label for="move_unitPrice">Precio unitario</label>
-        <input type="text" name="move_unitPrice" id="move_unitPrice" required><br>
 
-        {% comment %} Visibilidad de stock, display: none {% endcomment %}
-        <label for="stock" style="display: none;">Stock</label>
-        {% comment %} Visibilidad de stock, display: none {% endcomment %}
-        <select name="stock" id="stock" style="display: none;">
-            {% for stock in stocks %}
-                <option value="{{ stock.id }}">{{ stock.stock_name }}</option>
-            {% endfor %}
-        </select><br>
-        <button type="submit">
-            Guardar
-        </button>
-    </form>
+    <h1 style="color: #333; font-size: 24px; font-weight: bold;">
+        <i class="fas fa-table"></i> Registro de inventario
+    </h1>
 
-    <h1>Registro de inventario</h1>
     
     <!-- Mostrar el valor del inventario -->
-    {%for stock in stocks%}
-    <p>Valor del inventario: {{stock.stock_price}}</p>
-    {%endfor%}
-    <!-- Mostrar el valor del inventario -->
 
-    <table>
-        <thead>
-        <tr>
-            <th colspan="15">Inventario de Software de CodeCrafters S.A. de C.V.</th>
-        </tr>
-        <tr>
-            <th rowspan="2">Fecha</th>
-            <th rowspan="2">Descripcion</th>
-            <th colspan="3">Entradas</th>
-            <th colspan="3">Salidas</th>
-            <th colspan="3">Existencias</th>
-        </tr>
-        <tr>
-            <th>Cantidad</th>
-            <th>Costo</th>  <!-- Añadido para mostrar el precio unitario -->
-            <th>Total</th>
-            <th>Cantidad</th>
-            <th>Costo</th>
-            <th>Total</th>
-            <th>Cantidad</th>
-            <th>Costo</th>
-            <th>Total</th>
-        </tr>
+    <!--Mostra historial de movimientos -->
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead class="bg-gray-800 text-white">
+            <tr>
+                <th class="p-2 border" colspan="12">Inventario de Software de CodeCrafters S.A. de C.V.</th>
+            </tr>
+            <tr>
+                <th class="bg-gray-800 p-2 border" colspan="12" >Costo Promedio Ponderado CPP</th>
+            </tr>
+            <tr>
+                <th rowspan="2" class="bg-gray-800 p-2 border">Fecha</th>
+                <th rowspan="2" class="bg-gray-800 p-2 border" >Descripción</th>
+                <th colspan="3" class="bg-gray-800 p-2 border">Entradas</th>
+                <th colspan="3" class="bg-gray-800 p-2 border" >Salidas</th>
+                <th colspan="3" class="bg-gray-800 p-2 border">Existencias</th>
+            </tr>
+            <tr>
+                <th class="p-2 border">Cantidad</th>
+                <th class="p-2 border">Costo</th>
+                <th class="p-2 border">Total</th>
+                <th class="p-2 border">Cantidad</th>
+                <th class="p-2 border">Costo</th>
+                <th class="p-2 border">Total</th>
+                <th class="p-2 border">Cantidad</th>
+                <th class="p-2 border">Costo</th>
+                <th class="p-2 border">Total</th>
+            </tr>
         </thead>
         {% for move in moves %}
-            <tr>
-                <td>{{ move.move_date }}</td>
-                <td>{{ move.move_description }}</td>
+            <tr class="hover:bg-gray-100">
+                <td class="p-2 border">{{ move.move_date }}</td>
+                <td class="p-2 border">{{ move.move_description }}</td>
                 {% if move.move_type == "input" %}
-                    <td>{{ move.move_quantity }}</td>
-                    <td>{{ move.move_unitPrice }}</td>
-                    <!-- Mostrar precio unitario solo para movimientos de entrada -->
-                    <td>{{ move.move_price }}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td class="p-2 border">{{ move.move_quantity }}</td>
+                    <td class="p-2 border"><p>$ {{ move.move_unitPrice }}</p></td>
+                    <td class="p-2 border"><p>$ {{ move.move_price }}</p></td>
+                    <td class="p-2 border"></td>
+                    <td class="p-2 border"></td>
+                    <td class="p-2 border"></td>
                 {% elif move.move_type == "output" %}
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>{{ move.move_quantity }}</td>
-                    <td>{{ move.stock_unitPrice }}</td>
-                    <!-- Mostrar precio unitario solo para movimientos de entrada -->
-                    <td>{{ move.move_price }}</td>
+                    <td class="p-2 border"></td>
+                    <td class="p-2 border"></td>
+                    <td class="p-2 border"></td>
+                    <td class="p-2 border">{{ move.move_quantity }}</td>
+                    <td class="p-2 border"><p>$ {{ move.stock_unitPrice }}</p></td>
+                    <td class="p-2 border"><p>$ {{ move.move_price }}</p></td>
                 {% endif %}
-                <td>{{ move.stock_quantity }}</td>
-                <td>{{ move.stock_unitPrice }}</td>
-                <td>{{ move.stock_price }}</td>
+                <td class="p-2 border">{{ move.stock_quantity }}</td>
+                <td class="p-2 border"><p>$ {{ move.stock_unitPrice }}</p></td>
+                <td class="p-2 border"><p>$ {{ move.stock_price }}</p></td>
             </tr>
         {% endfor %}
     </table>
+
+    <!-- Mostrar el valor del inventario -->
+    {% for stock in stocks %}
+      <p class="bg-gray-800 text-white p-2 font-bold">Valor del inventario: ${{ stock.stock_price }}</p>
+    {% endfor %}
+
+
+    
 {% endblock %}

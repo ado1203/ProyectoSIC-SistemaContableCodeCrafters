@@ -1,29 +1,36 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Registra nuevo libro mayor</h1>
+<h1 class="text-3xl font-bold mb-4">
+    <i class="fas fa-clipboard"></i> Registra nuevo libro mayor
+</h1>
 
-    <form action="/ledgers/" method="POST">
-        {% csrf_token %}
-        <label for="start_date">Fecha de inicio</label>
-        <input type="date" name="start_date" id="start_date">
-        <br>
-        <label for="end_date">Fecha de fin</label>
-        <input type="date" name="end_date" id="end_date">
-        <br>
-        <button type="submit">Guardar</button>
-    </form>
+<!-- Formulario de Registro de Libro Mayor -->
+<form action="/ledgers/" method="POST" class="max-w-md p-4 border border-gray-300 bg-gray-800 text-white rounded-md">
+    {% csrf_token %}
+    <div class="mb-4 flex items-center">
+        <label for "start_date" class="w-1/4 text-left text-gray-300">Fecha de inicio</label>
+        <input type="date" name="start_date" id="start_date" class="w-3/4 p-2 border rounded-md text-gray-700">
+    </div>
+    <div class="mb-4 flex items-center">
+        <label for="end_date" class="w-1/4 text-left text-gray-300">Fecha de fin</label>
+        <input type="date" name="end_date" id="end_date" class="w-3/4 p-2 border rounded-md text-gray-700">
+    </div>
+    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">Guardar</button>
+</form>
 
-    <h1>Libros mayores</h1>
+<!-- Lista de Libros Mayores -->
+<h1 class="text-3xl font-bold mt-8 mb-4">
+    <i class="fas fa-book"></i> Libros mayores
+</h1>
 
-    <ul>
-        {% for ledger in ledgers %}
-            <li>
-                <a href="{% url 'ledger' ledger.id %}">Fecha
-                    inicio: {{ ledger.start_date }} -
-                    Fecha
-                    final: {{ ledger.end_date }}</a>
-            </li>
-        {% endfor %}
-    </ul>
+<ul class="pl-6">
+    {% for ledger in ledgers %}
+        <li class="text-gray-500" >
+            <i class="fas fa-arrow-right pr-2"></i>
+            <a href="{% url 'ledger' ledger.id %}" class="text-blue-500 hover:underline">Fecha inicio: {{ ledger.start_date }} - Fecha final: {{ ledger.end_date }}</a>
+        </li>
+    {% endfor %}
+</ul>
+</div>
 {% endblock %}

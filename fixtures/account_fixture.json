@@ -1,32 +1,212 @@
 [
   {
-    "model": "general_ledger.Account",
-    "pk": 1,
-    "fields": {
-      "code": "11",
-      "name": "Cuenta Bancaria",
-      "balance": "0.00",
-      "category": 1
-    }
+      "model": "general_ledger.Account",
+      "pk": 1,
+      "fields": {
+          "code": "11",
+          "name": "Cuenta Bancaria",
+          "balance": "0.00",
+          "category": 1
+      }
   },
   {
-    "model": "general_ledger.Account",
-    "pk": 2,
-    "fields": {
-      "code": "21",
-      "name": "Cuentas por pagar",
-      "balance": "0.00",
-      "category": 2
-    }
+      "model": "general_ledger.Account",
+      "pk": 2,
+      "fields": {
+          "code": "21",
+          "name": "Cuentas por pagar",
+          "balance": "0.00",
+          "category": 2
+      }
   },
   {
-    "model": "general_ledger.Account",
-    "pk": 3,
-    "fields": {
-      "code": "31",
-      "name": "Capital",
-      "balance": "0.00",
-      "category": 3
-    }
+      "model": "general_ledger.Account",
+      "pk": 3,
+      "fields": {
+          "code": "31",
+          "name": "Capital",
+          "balance": "0.00",
+          "category": 3
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 4,
+      "fields": {
+          "code": "12",
+          "name": "IVA crédito fiscal",
+          "balance": "0.00",
+          "category": 1
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 5,
+      "fields": {
+          "code": "13",
+          "name": "Inventario de Software",
+          "balance": "0.00",
+          "category": 1
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 6,
+      "fields": {
+          "code": "14",
+          "name": "Materiales y Suministros",
+          "balance": "0.00",
+          "category": 1
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 7,
+      "fields": {
+          "code": "211",
+          "name": "Deudas por Suministro Eléctrico Atrasado",
+          "balance": "0.00",
+          "category": 2
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 8,
+      "fields": {
+          "code": "212",
+          "name": "Deudas por Suministro de Agua Atrasado",
+          "balance": "0.00",
+          "category": 2
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 9,
+      "fields": {
+          "code": "22",
+          "name": "IVA débito fiscal",
+          "balance": "0.00",
+          "category": 2
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 10,
+      "fields": {
+          "code": "32",
+          "name": "Utilidad bruta del ejercicio",
+          "balance": "0.00",
+          "category": 3
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 11,
+      "fields": {
+          "code": "41",
+          "name": "Gastos de ventas",
+          "balance": "0.00",
+          "category": 4
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 12,
+      "fields": {
+          "code": "42",
+          "name": "Gastos de administración",
+          "balance": "0.00",
+          "category": 4
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 13,
+      "fields": {
+          "code": "43",
+          "name": "Gastos de materiales y suministros",
+          "balance": "0.00",
+          "category": 4
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 14,
+      "fields": {
+          "code": "44",
+          "name": "Gastos personales",
+          "balance": "0.00",
+          "category": 4
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 15,
+      "fields": {
+          "code": "45",
+          "name": "Gastos por Intereses Acumulados",
+          "balance": "0.00",
+          "category": 4
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 16,
+      "fields": {
+          "code": "46",
+          "name": "Gastos por Depreciación Acumulada",
+          "balance": "0.00",
+          "category": 4
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 17,
+      "fields": {
+          "code": "47",
+          "name": "Gastos por Amortización Acumulada",
+          "balance": "0.00",
+          "category": 4
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 18,
+      "fields": {
+          "code": "48",
+          "name": "Compras",
+          "balance": "0.00",
+          "category": 4
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 19,
+      "fields": {
+          "code": "51",
+          "name": "Ventas",
+          "balance": "0.00",
+          "category": 5
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 20,
+      "fields": {
+          "code": "52",
+          "name": "Descuentos sobre compras",
+          "balance": "0.00",
+          "category": 5
+      }
+  },
+  {
+      "model": "general_ledger.Account",
+      "pk": 21,
+      "fields": {
+          "code": "53",
+          "name": "Descuentos sobre ventas",
+          "balance": "0.00",
+          "category": 5
+      }
   }
 ]
