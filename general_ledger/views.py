@@ -40,7 +40,7 @@ def create_account(request):
         if form.is_valid():
             new_account = form.save(commit=False)
             new_account.save()
-            return redirect('account')
+            return redirect('create_account')
     else:
         form = AccountForm()
 
@@ -77,8 +77,8 @@ def transaction(request):
                     new_transaction.ledger = ledger
                     new_transaction.save()
 
-                    # Redirige a la página del libro mayor actual
-                    return redirect('ledger', ledger_id=ledger.id)
+                    # Redirige a la pagina actual
+                    return redirect('transaction')
             except Ledger.DoesNotExist:
                 error_message = ('No se puede agregar la transacción porque no existe un libro mayor para esa fecha.')
         else:
