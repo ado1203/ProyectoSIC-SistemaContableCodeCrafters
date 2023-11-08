@@ -1,0 +1,89 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mx-auto p-4">
+  <h1 class="text-3xl font-bold mb-4 text-center">Cierre contable</h1>
+  <div class="text-center mt-8">
+    <a
+      href="{% url 'ledgers' %}"
+      class="text-blue-500 hover:text-blue-700 transition duration-300 ease-in-out"
+      style="margin-left: 90%"
+    >
+      <i class="fas fa-arrow-left"></i> Regresar
+    </a>
+  </div>
+  <div class="mb-8 max-w-md mx-auto">
+    <h2 class="text-2xl font-bold mb-2">Resumen Financiero</h2>
+    <div class="bg-white rounded shadow overflow-hidden mb-4">
+      <table class="w-full">
+        <thead class="bg-gray-800 text-white">
+          <tr>
+            <th class="py-2 px-4 text-left">Concepto</th>
+            <th class="py-2 px-4 text-left">Valor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="p-2 border">Ventas netas</td>
+            <td class="p-2 border">{{ ventas_netas }}</td>
+          </tr>
+          <tr>
+            <td class="p-2 border">Compras totales</td>
+            <td class="p-2 border">{{ compras_totales }}</td>
+          </tr>
+          <tr>
+            <td class="p-2 border">Compras netas</td>
+            <td class="p-2 border">{{ compras_netas }}</td>
+          </tr>
+          <tr>
+            <td class="p-2 border">Inventario inicial</td>
+            <td class="p-2 border">{{ inventario_inicial }}</td>
+          </tr>
+          <tr>
+            <td class="p-2 border">Mercancias disponibles</td>
+            <td class="p-2 border">{{ mercancias_disponibles }}</td>
+          </tr>
+          <tr>
+            <td class="p-2 border">Inventario final</td>
+            <td class="p-2 border">{{ inventario_final }}</td>
+          </tr>
+          <tr>
+            <td class="p-2 border">Costo de ventas</td>
+            <td class="p-2 border">{{ costo_de_ventas }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mb-8 max-w-md mx-auto">
+      <h2 class="text-2xl font-bold mb-2">Estado de Resultado</h2>
+      <div class="bg-white rounded shadow overflow-hidden">
+        <table class="w-full">
+          <thead class="bg-gray-800 text-white">
+            <tr>
+              <th class="py-2 px-4 text-left">Concepto</th>
+              <th class="py-2 px-4 text-left">Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="p-2 border">Ingreso de ventas</td>
+              <td class="p-2 border">{{ ingreso_de_ventas }}</td>
+            </tr>
+            <tr>
+              <td class="p-2 border">Utilidad bruta</td>
+              <td class="p-2 border">{{ utilidad_bruta }}</td>
+            </tr>
+            <tr>
+              <td class="p-2 border">Gastos de operacion</td>
+              <td class="p-2 border">{{ gastos_de_operacion }}</td>
+            </tr>
+            <tr>
+              <td class="p-2 border">Utilidad operativa</td>
+              <td class="p-2 border">{{ utilidad_operativa }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endblock %}
+  </div>
+</div>
