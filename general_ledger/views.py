@@ -62,9 +62,11 @@ def transaction(request):
             amount = request.POST.get('amount')
 
             try:
-                ledger = Ledger.objects.get(start_date__lte=transaction_date, end_date__gte=transaction_date)
+                ledger = Ledger.objects.get(
+                    start_date__lte=transaction_date, end_date__gte=transaction_date)
                 if ledger.is_balance_sheet:
-                    error_message = ('No se pueden agregar transacciones a un libro mayor con cierre contable.')
+                    error_message = (
+                        'No se pueden agregar transacciones a un libro mayor con cierre contable.')
                 else:
                     new_transaction = form.save(commit=False)
 
@@ -80,9 +82,11 @@ def transaction(request):
                     # Redirige a la pagina actual
                     return redirect('transaction')
             except Ledger.DoesNotExist:
-                error_message = ('No se puede agregar la transacción porque no existe un libro mayor para esa fecha.')
+                error_message = (
+                    'No se puede agregar la transacción porque no existe un libro mayor para esa fecha.')
         else:
-            error_message = ('Formulario no válido. Por favor, verifica los campos.')
+            error_message = (
+                'Formulario no válido. Por favor, verifica los campos.')
     else:
         form = TransactionForm()
 
@@ -97,7 +101,6 @@ def transaction(request):
     }
 
     return render(request, 'transaction.html', context)
-
 
 
 def ledgers(request):
@@ -158,7 +161,57 @@ def close_ledger(request, ledger_id):
         ledger.is_balance_sheet = True
         ledger.save()
 
-        return redirect('ledger', ledger_id=ledger_id)
+        # mostrar pagina de balance
+        return redirect('balance_sheet')
+
+
+def balance_sheet(request):
+    if request.method == 'GET':
+        accounts = Account.objects.all()
+
+        ventas_netas = accounts.get(name='Ventas').balance - (accounts.get(
+            name='Devoluciones sobre ventas').balance + accounts.get(
+            name='Descuentos sobre ventas').balance)
+
+        compras_totales = accounts.get(name='Compras').balance
+
+        compras_netas = compras_totales - (accounts.get(
+            name='Devoluciones sobre compras').balance + accounts.get(
+            name='Descuentos sobre compras').balance)
+
+        # Obtener la transacción más antigua de la cuenta "Inventario de Software"
+        inventario_inicial_transaction = Transaction.objects.filter(
+            account__name='Inventario de Software').order_by('transaction_date').first()
+        inventario_inicial = inventario_inicial_transaction.transaction_debit_amount if inventario_inicial_transaction else 0
+
+        mercancias_disponibles = inventario_inicial + compras_netas
+
+        inventario_final = accounts.get(name='Inventario de Software').balance
+
+        costo_de_ventas = mercancias_disponibles - inventario_final
+
+        # Estado de resultado
+        ingreso_de_ventas = accounts.get(name='Ventas').balance
+        utilidad_bruta = ingreso_de_ventas - costo_de_ventas
+        gastos_de_operacion = accounts.get(
+            name='Gastos de administración').balance + accounts.get(name='Gastos de ventas').balance
+        utilidad_operativa = utilidad_bruta - gastos_de_operacion
+
+        context = {
+            'ventas_netas': ventas_netas,
+            'compras_totales': compras_totales,
+            'compras_netas': compras_netas,
+            'inventario_inicial': inventario_inicial,
+            'mercancias_disponibles': mercancias_disponibles,
+            'inventario_final': inventario_final,
+            'costo_de_ventas': costo_de_ventas,
+            'ingreso_de_ventas': ingreso_de_ventas,
+            'utilidad_bruta': utilidad_bruta,
+            'gastos_de_operacion': gastos_de_operacion,
+            'utilidad_operativa': utilidad_operativa,
+        }
+
+        return render(request, 'balance_sheet.html', context=context)
 
 
 def get_account_totals(ledger):
@@ -169,10 +222,13 @@ def get_account_totals(ledger):
         debit_total = 0
         credit_total = 0
         # Calcula los totales de débito y crédito específicos para el libro mayor actual
-        transactions = Transaction.objects.filter(account=account, ledger=ledger)
+        transactions = Transaction.objects.filter(
+            account=account, ledger=ledger)
         for transaction in transactions:
-            debit_total += max(transaction.transaction_debit_amount, 0)  # Asegura que las cantidades sean positivas
-            credit_total += max(transaction.transaction_credit_amount, 0)  # Asegura que las cantidades sean positivas
+            # Asegura que las cantidades sean positivas
+            debit_total += max(transaction.transaction_debit_amount, 0)
+            # Asegura que las cantidades sean positivas
+            credit_total += max(transaction.transaction_credit_amount, 0)
 
         if debit_total != credit_total:
             # Maneja el desequilibrio aquí (por ejemplo, registra un error o realiza alguna acción específica)
@@ -185,7 +241,6 @@ def get_account_totals(ledger):
         }
 
     return account_totals
-
 
 
 def get_totals_balance_sheet():

@@ -11,7 +11,7 @@
     </h1>
      
     {% if ledger.is_balance_sheet %}
-        <span id="closeLedgerMessage" style="display: none; color: green; padding-left: 10px; font-size: 16px;">
+        <span style="color: green; padding-left: 10px; font-size: 16px;">
             <i class="fas fa-check-circle"></i> Cierre contable realizado
         </span>
     {% endif %}
@@ -59,7 +59,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2" style="text-align: center;">
-                                    <strong>Diferencia:
+                                    <strong>Saldo:
                                         {{ account.balance }}
                                     </strong>
                                 </td>
@@ -119,19 +119,14 @@
         {% csrf_token %}
         <button type="submit" class="bg-green-900 hover-bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="return confirm('¿Está seguro de que desea realizar el cierre contable?');">
             Realizar cierre contable
-        </button>
-        
+        </button> 
     </form>
+{% else %}
+    <!-- boton para ver balance sheet -->
+    <button>
+        <a href="{% url 'balance_sheet' %}" class="bg-green-900 hover-bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Ver balance de comprobación
+        </a>
+    </button>
 {% endif %}
-
-<script>
-    
-    // Verificar y mostrar el mensaje al cargar la página
-    var ledgerDate = "{{ ledger.start_date }} - {{ ledger.end_date }}";
-    var isCloseLedgerMessageVisible = localStorage.getItem(ledgerDate);
-    if (isCloseLedgerMessageVisible) {
-        document.getElementById('closeLedgerMessage').style.display = 'inline';
-    }
-</script>
-
 {% endblock %}
